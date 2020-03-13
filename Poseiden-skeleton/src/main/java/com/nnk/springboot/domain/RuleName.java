@@ -7,5 +7,19 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "rulename")
 public class RuleName {
-    // TODO: Map columns in data table RULENAME with corresponding java fields
+    @Id
+    Integer id;
+    @Column
+    String name;
+    @Column
+    String description;
+    @Column
+    String json;
+    @Column
+    String template;
+    @Column
+    String sqlStr;
+    @Column
+    String sqlPart;
+
 }
