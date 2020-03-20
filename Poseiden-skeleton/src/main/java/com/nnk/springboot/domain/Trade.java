@@ -1,6 +1,7 @@
 package com.nnk.springboot.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Service;
 
@@ -8,13 +9,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.sql.Timestamp;
 
-
-@Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@Entity
 @Table(name = "trade")
 public class Trade {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Integer tradeId;
     @Column
     String account;
@@ -54,4 +56,10 @@ public class Trade {
     String sourceListId;
     @Column
     String side;
+
+    public Trade(Integer id, String tradeAccount, String type) {
+        this.tradeId = id;
+        this.account = tradeAccount;
+        this.type = type;
+    }
 }

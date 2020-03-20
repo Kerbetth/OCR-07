@@ -1,6 +1,8 @@
 package com.nnk.springboot.services;
 
+import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.User;
+import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +18,8 @@ import java.util.Arrays;
 public class MyAppUserDetailsService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-    @Override
+
+@Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(userName);
         GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());

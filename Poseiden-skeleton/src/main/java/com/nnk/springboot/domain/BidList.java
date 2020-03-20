@@ -1,23 +1,31 @@
 package com.nnk.springboot.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "bidlist")
 public class BidList {
     @Id
-    Integer BidListId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Integer bidListId;
     @Column
+    @NotBlank(message = "Name of account is mandatory")
     String account;
     @Column
+    @NotBlank(message = "Type of account is mandatory")
     String type;
     @Column
+    @NotNull(message = "bidQuantity must not be null")
     Double bidQuantity;
     @Column
     Double askQuantity;
@@ -55,4 +63,11 @@ public class BidList {
     String sourceListId;
     @Column
     String side;
+
+    public BidList(String account, String type, double bidQuantity) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+    }
+
 }
