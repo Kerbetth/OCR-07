@@ -23,13 +23,13 @@ public class RatingController {
     public String home(Model model)
     {
         // TODO: find all Rating, add to model
-        model.addAttribute("bidLists", ratingService.loadAllRating());
+        model.addAttribute("ratings", ratingService.loadAllRating());
         return "rating/list";
     }
 
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating, Model model) {
-        model.addAttribute("bidList", new Rating());
+        model.addAttribute("rating", new Rating());
         return "rating/add";
     }
 
@@ -37,7 +37,7 @@ public class RatingController {
     public String validate(@Valid Rating rating, BindingResult result, Model model) {
         // TODO: check data valid and save to db, after saving return Rating list
         if (result.hasErrors()) {
-            return "bidList/add";
+            return "rating/add";
         }
         model.addAttribute("bidList", rating);
         return "redirect:/rating/list";
@@ -46,25 +46,24 @@ public class RatingController {
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get Rating by Id and to model then show to the form
-        model.addAttribute("id", id);
-        model.addAttribute("bidList", ratingService.findBidListbyID(id));
+        model.addAttribute("rating", ratingService.findBidListbyID(id));
         return "rating/update";
     }
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
-                             BindingResult result, Model model) {
+                             BindingResult result) {
         if (result.hasErrors()) {
-            return "/bidList/update/"+id;
+            return "/rating/update/"+id;
         }
-        ratingService.updateBidlist(rating);
+        ratingService.updateRating(rating);
         // TODO: check required fields, if valid call service to update Rating and return Rating list
         return "redirect:/rating/list";
     }
 
     @GetMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        ratingService.deleteBidlist(id);
+    public String deleteRating(@PathVariable("id") Integer id) {
+        ratingService.deleteRating(id);
         // TODO: Find Rating by Id and delete the Rating, return to Rating list
         return "redirect:/rating/list";
     }

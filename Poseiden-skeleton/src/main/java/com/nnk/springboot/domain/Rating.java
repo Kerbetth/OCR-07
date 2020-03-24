@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -19,10 +20,13 @@ public class Rating {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
     @Column
+    @NotEmpty(message = "moodysRating Must not be null")
     String moodysRating;
     @Column
+    @NotEmpty(message = "sandPRating Must not be null")
     String sandPRating;
     @Column
+    @NotEmpty(message = "fitchRating Must not be null")
     String fitchRating;
     @Column
     Integer orderNumber;

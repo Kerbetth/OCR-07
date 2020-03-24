@@ -21,7 +21,7 @@ public class CurvePoint {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
     @Column
-    @NotEmpty(message = "curveID Must not be null")
+    @NotNull(message = "curveID Must not be null")
     Integer curveID;
     @Column
     Timestamp asOfDate;

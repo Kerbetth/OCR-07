@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.sql.Timestamp;
 
 @Getter
@@ -20,10 +21,13 @@ public class RuleName {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
     @Column
+    @NotEmpty(message = "name Must not be null")
     String name;
     @Column
+    @NotEmpty(message = "description Must not be null")
     String description;
     @Column
+    @NotEmpty(message = "json Must not be null")
     String json;
     @Column
     String template;

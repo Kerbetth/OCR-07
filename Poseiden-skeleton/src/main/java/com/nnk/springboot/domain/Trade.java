@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Getter
@@ -19,10 +21,13 @@ public class Trade {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer tradeId;
     @Column
+    @NotEmpty(message = "account Must not be null")
     String account;
     @Column
+    @NotEmpty(message = "type Must not be null")
     String type;
     @Column
+    @NotNull(message = "buyQuantity Must not be null")
     Double buyQuantity;
     @Column
     Double sellQuantity;

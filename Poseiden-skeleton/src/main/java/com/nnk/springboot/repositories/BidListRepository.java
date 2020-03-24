@@ -5,9 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BidListRepository extends JpaRepository<BidList, Integer> {
     List<BidList> findAll();
-    BidList findFirstByBidListId(Integer BidListId);
+    Optional<BidList> findById(Integer BidListId);
 }

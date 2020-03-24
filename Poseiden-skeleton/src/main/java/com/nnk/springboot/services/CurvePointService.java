@@ -18,14 +18,14 @@ public class CurvePointService {
         List<CurvePoint> curvePoints = curvePointRepository.findAll();
         return curvePoints;
     }
-    public CurvePoint findCurvePointbyID(Integer integer){
-        CurvePoint curvePoint = curvePointRepository.findFirstByid(integer);
+    public CurvePoint findCurvePointbyID(Integer id){
+        CurvePoint curvePoint = curvePointRepository.findById(id).get();
         return curvePoint;
     }
     public void updateCurvePoint(CurvePoint curvePoint) {
         curvePointRepository.save(curvePoint);
     }
     public void deleteCurvePoint(Integer id){
-        curvePointRepository.delete(curvePointRepository.findFirstByid(id));
+        curvePointRepository.delete(curvePointRepository.findById(id).get());
     }
 }

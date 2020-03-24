@@ -17,6 +17,7 @@ import javax.validation.Valid;
 
 @Controller
 public class BidListController {
+
     // TODO: Inject Bid service
     @Autowired
     BidService bidService;

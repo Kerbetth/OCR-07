@@ -31,8 +31,8 @@ public class RuleNameController {
     }
 
     @GetMapping("/ruleName/add")
-    public String addRuleForm(RuleName bid, Model model) {
-        model.addAttribute("bidList", new Rating());
+    public String addRuleForm(Model model) {
+        model.addAttribute("ruleName", new RuleName());
         return "ruleName/add";
     }
 
@@ -40,30 +40,34 @@ public class RuleNameController {
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
         // TODO: check data valid and save to db, after saving return RuleName list
         if (result.hasErrors()) {
-            return "bidList/add";
+            return "ruleName/add";
         }
         model.addAttribute("ruleName", ruleName);
-        return "redirect:/rating/list";
+        return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get RuleName by Id and to model then show to the form
-        model.addAttribute("id", id);
         model.addAttribute("ruleName", ruleNameService.findBidListbyID(id));
         return "rating/update";
     }
 
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                             BindingResult result, Model model) {
+                             BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
+        if (result.hasErrors()) {
+            return "ruleName/update";
+        }
+        ruleNameService.updateRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/delete/{id}")
-    public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
+    public String deleteRuleName(@PathVariable("id") Integer id) {
         // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
+        ruleNameService.deleteRuleName(id);
         return "redirect:/ruleName/list";
     }
 }
