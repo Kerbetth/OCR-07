@@ -59,14 +59,12 @@ public class BidListController {
             return "bidList/update";
         }
         bidService.updateBidlist(bidList);
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
         return "redirect:/bidList/list";
     }
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
         bidService.deleteBidlist(id);
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
         return "redirect:/bidList/list";
     }
 }

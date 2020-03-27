@@ -36,4 +36,10 @@ public class RuleName {
     @Column
     String sqlPart;
 
+    public RuleName(Integer id, String name, String description, String json) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.json = json;
+    }
 }

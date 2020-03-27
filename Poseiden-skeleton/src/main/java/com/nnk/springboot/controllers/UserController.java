@@ -32,14 +32,11 @@ public class UserController {
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid User user, BindingResult result, Model model) {
-        System.out.println(user.getBrutePassword());
+    public String validate(@Valid User user, BindingResult result) {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setEncodePassword(encoder.encode(user.getBrutePassword()));
-            user.setBrutePassword("DefaultPass,0");
             userRepository.save(user);
-            model.addAttribute("users", userRepository.findAll());
             return "redirect:/user/list";
         }
         return "user/add";
@@ -55,24 +52,22 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
-                             BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return "user/update";
+                             BindingResult result) {
+        if (!result.hasErrors()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setEncodePassword(encoder.encode(user.getBrutePassword()));
+            user.setId(id);
+            userRepository.save(user);
+            return "redirect:/user/list";
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        user.setEncodePassword(encoder.encode(user.getBrutePassword()));
-        user.setId(id);
-        userRepository.save(user);
-        model.addAttribute("users", userRepository.findAll());
-        return "redirect:/user/list";
+        return "user/update";
     }
 
     @GetMapping("/user/delete/{id}")
-    public String deleteUser(@PathVariable("id") Integer id, Model model) {
+    public String deleteUser(@PathVariable("id") Integer id) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         userRepository.delete(user);
-        model.addAttribute("users", userRepository.findAll());
         return "redirect:/user/list";
     }
 }

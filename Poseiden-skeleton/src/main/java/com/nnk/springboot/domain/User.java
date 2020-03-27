@@ -20,6 +20,7 @@ public class User {
     @NotBlank(message = "Username is mandatory")
     private String username;
     @ValidPassword
+    @Transient
     private String brutePassword = "DefaultPass,0";;
     private String encodePassword;
     @NotBlank(message = "FullName is mandatory")

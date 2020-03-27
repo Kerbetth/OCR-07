@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -34,6 +32,10 @@ public class CurvePoint {
     @Column
     Timestamp creationDate;
 
-    public CurvePoint(int id, double curveID, double value) {
+    public CurvePoint(int id, Integer curveID, double term, double value) {
+        this.id = id;
+        this.curveID = curveID;
+        this.term = term;
+        this.value = value;
     }
 }
