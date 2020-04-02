@@ -7,15 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Controller
 public class CurveController {
+
     // TODO: Inject Curve Point service
     @Autowired
     CurvePointService curvePointService;
@@ -35,7 +33,7 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result) {
+    public String validate(@Valid @RequestBody CurvePoint curvePoint, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Curve list
         if (result.hasErrors()) {
             return "curvePoint/add";
@@ -53,12 +51,13 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
+    public String updateBid(@PathVariable("id") Integer id, @Valid @RequestBody CurvePoint curvePoint,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Curve and return Curve list
-        if (result.hasErrors()) {
+        if (result.hasErrors()|| curvePointService.findCurvePointbyID(id)==null) {
             return "curvePoint/add";
         }
+        curvePoint.setId(id);
         curvePointService.updateCurvePoint(curvePoint);
         return "redirect:/curvePoint/list";
     }
@@ -66,6 +65,9 @@ public class CurveController {
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
         // TODO: Find Curve by Id and delete the Curve, return to Curve list
+        if (curvePointService.findCurvePointbyID(id)==null) {
+            return "curvePoint/list";
+        }
         curvePointService.deleteCurvePoint(id);
         return "redirect:/curvePoint/list";
     }

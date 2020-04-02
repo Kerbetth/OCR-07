@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -37,13 +34,13 @@ public class TradeController {
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result) {
+    public String validate(@Valid @RequestBody Trade trade, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Trade list
         if (result.hasErrors()) {
             return "trade/add";
         }
         tradeService.updateTrade(trade);
-        return "redirect:/bidList/list";
+        return "redirect:/trade/list";
     }
 
     @GetMapping("/trade/update/{id}")
@@ -55,11 +52,11 @@ public class TradeController {
     }
 
     @PostMapping("/trade/update/{id}")
-    public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
+    public String updateTrade(@PathVariable("id") Integer id, @Valid @RequestBody Trade trade,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Trade and return Trade list
-        if (result.hasErrors()) {
-            return "trade/update";
+        if (result.hasErrors()||tradeService.findTradebyID(id)==null) {
+            return "redirect:/trade/list";
         }
         tradeService.updateTrade(trade);
         return "redirect:/trade/list";
@@ -67,8 +64,11 @@ public class TradeController {
 
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id) {
-        tradeService.deleteTrade(id);
         // TODO: Find Trade by Id and delete the Trade, return to Trade list
+        if (tradeService.findTradebyID(id)==null) {
+            return "redirect:/trade/list";
+        }
+        tradeService.deleteTrade(id);
         return "redirect:/trade/list";
     }
 }

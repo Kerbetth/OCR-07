@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -36,7 +33,7 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result) {
+    public String validate(@Valid @RequestBody BidList bid, BindingResult result) {
         if (result.hasErrors()) {
             return "bidList/add";
         }
@@ -54,16 +51,21 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList, BindingResult result, Model model) {
-        if (result.hasErrors()) {
+    public String updateBid(@PathVariable("id") Integer id, @Valid @RequestBody BidList bidList, BindingResult result, Model model) {
+        if (result.hasErrors() || bidService.findBidListbyID(id)==null) {
             return "bidList/update";
         }
+        bidList.setBidListId(id);
         bidService.updateBidlist(bidList);
         return "redirect:/bidList/list";
+
     }
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
+        if (bidService.findBidListbyID(id)==null) {
+            return "redirect:/bidList/list";
+        }
         bidService.deleteBidlist(id);
         return "redirect:/bidList/list";
     }
