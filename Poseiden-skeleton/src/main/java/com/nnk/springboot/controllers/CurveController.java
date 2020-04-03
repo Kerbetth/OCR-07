@@ -33,10 +33,20 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid @RequestBody CurvePoint curvePoint, BindingResult result) {
+    public String validate(@Valid CurvePoint curvePoint, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Curve list
         if (result.hasErrors()) {
             return "curvePoint/add";
+        }
+        curvePointService.updateCurvePoint(curvePoint);
+        return "redirect:/curvePoint/list";
+    }
+
+    @PostMapping("/curvePoint/validate/api")
+    public String validateApi(@Valid @RequestBody CurvePoint curvePoint, BindingResult result) {
+        // TODO: check data valid and save to db, after saving return Curve list
+        if (result.hasErrors()) {
+            return "redirect:/curvePoint/list";
         }
         curvePointService.updateCurvePoint(curvePoint);
         return "redirect:/curvePoint/list";
@@ -51,11 +61,23 @@ public class CurveController {
     }
 
     @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid @RequestBody CurvePoint curvePoint,
+    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Curve and return Curve list
         if (result.hasErrors()|| curvePointService.findCurvePointbyID(id)==null) {
             return "curvePoint/add";
+        }
+        curvePoint.setId(id);
+        curvePointService.updateCurvePoint(curvePoint);
+        return "redirect:/curvePoint/list";
+    }
+
+    @PostMapping("/curvePoint/update/api/{id}")
+    public String updateBidApi(@PathVariable("id") Integer id, @Valid @RequestBody CurvePoint curvePoint,
+                            BindingResult result) {
+        // TODO: check required fields, if valid call service to update Curve and return Curve list
+        if (result.hasErrors()|| curvePointService.findCurvePointbyID(id)==null) {
+            return "redirect:/curvePoint/list";
         }
         curvePoint.setId(id);
         curvePointService.updateCurvePoint(curvePoint);

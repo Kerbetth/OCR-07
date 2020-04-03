@@ -65,7 +65,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -98,7 +98,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -123,7 +123,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -146,7 +146,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -170,7 +170,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -183,7 +183,7 @@ public class TradeTestIT {
         trade.setAccount("another usual description");
         trade.setBuyQuantity(50.5);
         body = (new ObjectMapper()).valueToTree(trade).toString();
-        mvc.perform(post("/trade/update/"+ tradeRepository.findAll().get(0).getTradeId())
+        mvc.perform(post("/trade/update/api/"+ tradeRepository.findAll().get(0).getTradeId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -205,7 +205,7 @@ public class TradeTestIT {
         String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
-        mvc.perform(post("/trade/validate")
+        mvc.perform(post("/trade/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -218,7 +218,7 @@ public class TradeTestIT {
         trade.setAccount("another usual description");
         trade.setBuyQuantity(50.5);
         body = (new ObjectMapper()).valueToTree(trade).toString();
-        mvc.perform(post("/trade/update/10")
+        mvc.perform(post("/trade/update/api/10")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)

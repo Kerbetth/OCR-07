@@ -29,7 +29,9 @@ public class RuleNameService {
         return null;
     }
     public void updateRuleName(RuleName ruleName){
+        System.out.println(ruleName.getId());
         ruleNameRepository.save(ruleName);
+        System.out.println(ruleNameRepository.findAll().get(0).getId());
     }
     public void deleteRuleName(Integer id){
         ruleNameRepository.delete(ruleNameRepository.findById(id).get());

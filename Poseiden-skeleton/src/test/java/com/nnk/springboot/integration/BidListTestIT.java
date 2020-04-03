@@ -1,11 +1,8 @@
 package com.nnk.springboot.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nnk.springboot.config.SecurityConfig;
-import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.User;
-import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.repositories.BidListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,24 +12,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.context.WebApplicationContext;
 
 
-import static org.hamcrest.Matchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Created by Khang Nguyen.
@@ -50,13 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BidListTestIT {
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private BidListController bidListController;
+    private BidListRepository bidListRepository;
     @Autowired
     private MockMvc mvc;
-
-    private User user;
 
     private BidList bidList;
 
@@ -64,49 +53,180 @@ public class BidListTestIT {
 
     @BeforeEach
     public void setup() {
-        user = new User();
-        user.setId(1);
-        user.setBrutePassword("StrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("A User");
-        user.setRole("USER");
+        bidListRepository.deleteAll();
         bidList = new BidList();
         when(result.hasErrors()).thenReturn(false);
-        userRepository.deleteAll();
-        bidList.setBidListId(1);
+    }
+
+    @Test
+    public void addGoodBidList() throws Exception {
+        // Given
         bidList.setAccount("account");
-        bidList.setType("type");
-        bidList.setBidQuantity(20d);
-
-    }
-
-
-    @Test
-    public void givenAuthRequestOnPrivateService_shouldSucceedWith200() throws Exception {
-        mvc.perform(get("/bidList/list")).andDo(print()).andExpect(status().isOk());
-    }
-
-    @Test
-    public void depositController() throws Exception {
-        mvc.perform(get("/bidList/add"))
-                .andExpect(status().isOk())
-                .andExpect(model().attribute("bidList", any(BidList.class)));
-    }
-
-
-    @Test
-    public void depositingController() throws Exception {
-        BidList bidList = new BidList();
-        bidList.setType("Type Test");
-        bidList.setAccount("Account Test");
-        bidList.setBidListId(1);
-        bidList.setBidQuantity(80d);
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
         String body = (new ObjectMapper()).valueToTree(bidList).toString();
-        mvc.perform(post("/bidList/validate")
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
         )
                 .andExpect(status().is3xxRedirection());
+
+
+        // Then
+        assertThat(bidListRepository.findAll()).hasSize(1);
+        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account");
+    }
+
+    @Test
+    public void generateAddBidListFormWithSuccess() throws Exception {
+        mvc.perform(get("/bidList/add")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("accountName", "account1")
+                .content("bidList")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/add"));
+    }
+
+    @Test
+    public void generateUpdateBidListFormWithSuccess() throws Exception {
+        // Given
+        bidList.setAccount("account");
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
+        String body = (new ObjectMapper()).valueToTree(bidList).toString();
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+
+        mvc.perform(get("/bidList/update/"+ bidListRepository.findAll().get(0).getBidListId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("accountName", "account1")
+                .content("bidList")
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("bidList/update"));
+    }
+
+    @Test
+    public void deleteBidList() throws Exception {
+        // Given
+        bidList.setAccount("account");
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
+        String body = (new ObjectMapper()).valueToTree(bidList).toString();
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(get("/bidList/delete/"+ bidListRepository.findAll().get(0).getBidListId())
+        )
+                .andExpect(status().is3xxRedirection());
+
+        // Then
+        assertThat(bidListRepository.findAll()).hasSize(0);
+    }
+
+    @Test
+    public void deleteBidListWithWrongId() throws Exception {
+        // Given
+        bidList.setAccount("account");
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
+        String body = (new ObjectMapper()).valueToTree(bidList).toString();
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+        mvc.perform(get("/bidList/delete/10")
+        )
+                .andExpect(status().is3xxRedirection());
+
+        // Then
+        assertThat(bidListRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    public void updateBidList() throws Exception {
+        // Given
+        bidList.setAccount("account");
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
+        String body = (new ObjectMapper()).valueToTree(bidList).toString();
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+
+        assertThat(bidListRepository.findAll()).hasSize(1);
+
+        bidList.setAccount("account2");
+        bidList.setType("type2");
+        bidList.setBidQuantity(15.5);
+        body = (new ObjectMapper()).valueToTree(bidList).toString();
+        mvc.perform(post("/bidList/update/api/"+ bidListRepository.findAll().get(0).getBidListId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+
+        // Then
+        assertThat(bidListRepository.findAll()).hasSize(1);
+        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account2");
+    }
+
+    @Test
+    public void updateBidListWhithWrongId() throws Exception {
+        // Given
+        bidList.setAccount("account");
+        bidList.setType("type1");
+        bidList.setBidQuantity(15.5);
+        String body = (new ObjectMapper()).valueToTree(bidList).toString();
+
+        // When
+        mvc.perform(post("/bidList/validate/api")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+
+        assertThat(bidListRepository.findAll()).hasSize(1);
+
+        bidList.setAccount("account2");
+        bidList.setType("type2");
+        bidList.setBidQuantity(20.0);
+        body = (new ObjectMapper()).valueToTree(bidList).toString();
+        mvc.perform(post("/bidList/update/api/10")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(body)
+        )
+                .andExpect(status().is3xxRedirection());
+
+        // Then
+        assertThat(bidListRepository.findAll()).hasSize(1);
+        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account");
     }
 }

@@ -34,10 +34,20 @@ public class RuleNameController {
     }
 
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid @RequestBody RuleName ruleName, BindingResult result) {
+    public String validate(@Valid RuleName ruleName, BindingResult result) {
         // TODO: check data valid and save to db, after saving return RuleName list
         if (result.hasErrors()) {
             return "ruleName/add";
+        }
+        ruleNameService.updateRuleName(ruleName);
+        return "redirect:/ruleName/list";
+    }
+
+    @PostMapping("/ruleName/add/api")
+    public String addApi(@Valid @RequestBody RuleName ruleName, BindingResult result) {
+        // TODO: check data valid and save to db, after saving return RuleName list
+        if (result.hasErrors()) {
+            return "redirect:/ruleName/list";
         }
         ruleNameService.updateRuleName(ruleName);
         return "redirect:/ruleName/list";
@@ -52,12 +62,23 @@ public class RuleNameController {
 
 
     @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable("id") Integer id, @Valid @RequestBody RuleName ruleName,
+    public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
         if (result.hasErrors()||ruleNameService.findBidListbyID(id)==null) {
-            return "redirect:/rating/list";
+            return "ruleName/update";
         }
+        ruleNameService.updateRuleName(ruleName);
+        return "redirect:/ruleName/list";
+    }
+
+    @PostMapping("/ruleName/update/api/{id}")
+    public String updateRuleNameApi(@PathVariable("id") Integer id, @Valid @RequestBody RuleName ruleName,
+                                 BindingResult result) {
+        if (result.hasErrors()||ruleNameService.findBidListbyID(id)==null) {
+            return "redirect:/ruleName/list";
+        }
+        ruleName.setId(id);
         ruleNameService.updateRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
@@ -66,7 +87,7 @@ public class RuleNameController {
     public String deleteRuleName(@PathVariable("id") Integer id) {
         // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
         if (ruleNameService.findBidListbyID(id)==null) {
-            return "redirect:/rating/list";
+            return "redirect:/ruleName/list";
         }
         ruleNameService.deleteRuleName(id);
         return "redirect:/ruleName/list";

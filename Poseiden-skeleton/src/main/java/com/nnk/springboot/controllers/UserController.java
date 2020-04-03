@@ -30,7 +30,18 @@ public class UserController {
     }
 
     @PostMapping("/user/validate")
-    public String validate(@Valid @RequestBody User user, BindingResult result) {
+    public String validate(@Valid User user, BindingResult result) {
+        if (!result.hasErrors()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setEncodePassword(encoder.encode(user.getBrutePassword()));
+            userRepository.save(user);
+            return "redirect:/user/list";
+        }
+        return "user/add";
+    }
+
+    @PostMapping("/user/add/api")
+    public String addApi(@Valid @RequestBody User user, BindingResult result) {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setEncodePassword(encoder.encode(user.getBrutePassword()));
@@ -49,7 +60,20 @@ public class UserController {
     }
 
     @PostMapping("/user/update/{id}")
-    public String updateUser(@PathVariable("id") Integer id, @Valid @RequestBody User user,
+    public String updateUser(@PathVariable("id") Integer id, @Valid User user,
+                             BindingResult result) {
+        if (!result.hasErrors()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            user.setEncodePassword(encoder.encode(user.getBrutePassword()));
+            user.setId(id);
+            userRepository.save(user);
+            return "redirect:/user/list";
+        }
+        return "user/update";
+    }
+
+    @PostMapping("/user/update/api/{id}")
+    public String updateUserApi(@PathVariable("id") Integer id, @Valid @RequestBody User user,
                              BindingResult result) {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

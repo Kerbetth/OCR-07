@@ -34,10 +34,19 @@ public class TradeController {
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid @RequestBody Trade trade, BindingResult result) {
+    public String validate(@Valid Trade trade, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Trade list
         if (result.hasErrors()) {
             return "trade/add";
+        }
+        tradeService.updateTrade(trade);
+        return "redirect:/trade/list";
+    }
+
+    @PostMapping("/trade/add/api")
+    public String validateApi(@Valid @RequestBody Trade trade, BindingResult result) {
+        if (result.hasErrors()) {
+            return "redirect:/trade/list";
         }
         tradeService.updateTrade(trade);
         return "redirect:/trade/list";
@@ -52,8 +61,19 @@ public class TradeController {
     }
 
     @PostMapping("/trade/update/{id}")
-    public String updateTrade(@PathVariable("id") Integer id, @Valid @RequestBody Trade trade,
+    public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result) {
+        // TODO: check required fields, if valid call service to update Trade and return Trade list
+        if (result.hasErrors()||tradeService.findTradebyID(id)==null) {
+            return "redirect:/trade/list";
+        }
+        tradeService.updateTrade(trade);
+        return "redirect:/trade/list";
+    }
+
+    @PostMapping("/trade/update/api/{id}")
+    public String updateTradeApi(@PathVariable("id") Integer id, @Valid @RequestBody Trade trade,
+                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Trade and return Trade list
         if (result.hasErrors()||tradeService.findTradebyID(id)==null) {
             return "redirect:/trade/list";

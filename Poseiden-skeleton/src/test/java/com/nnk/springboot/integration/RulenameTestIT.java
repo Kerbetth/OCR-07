@@ -65,7 +65,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -98,7 +98,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -123,7 +123,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -146,7 +146,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -169,7 +169,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -182,7 +182,7 @@ public class RulenameTestIT {
         ruleName.setDescription("another usual description");
         ruleName.setName("name");
         body = (new ObjectMapper()).valueToTree(ruleName).toString();
-        mvc.perform(post("/ruleName/update/"+ ruleNameRepository.findAll().get(0).getId())
+        mvc.perform(post("/ruleName/update/api/"+ ruleNameRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -203,7 +203,7 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/validate")
+        mvc.perform(post("/ruleName/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -216,7 +216,7 @@ public class RulenameTestIT {
         ruleName.setDescription("another usual description");
         ruleName.setName("name");
         body = (new ObjectMapper()).valueToTree(ruleName).toString();
-        mvc.perform(post("/ruleName/update/10")
+        mvc.perform(post("/ruleName/update/api/10")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)

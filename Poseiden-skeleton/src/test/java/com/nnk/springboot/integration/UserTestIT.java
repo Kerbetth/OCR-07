@@ -92,7 +92,7 @@ public class UserTestIT {
         String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/validate")
+        mvc.perform(post("/user/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -116,7 +116,7 @@ public class UserTestIT {
         String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/validate")
+        mvc.perform(post("/user/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -140,7 +140,7 @@ public class UserTestIT {
         String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/validate")
+        mvc.perform(post("/user/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -152,12 +152,12 @@ public class UserTestIT {
         user.setUsername("ANewUser");
         user.setRole("USER");
         body = (new ObjectMapper()).valueToTree(user).toString();
-        mvc.perform(get("/user/update/" + userRepository.findByUserName("User").getId())
+        mvc.perform(post("/user/update/api/" + userRepository.findByUserName("User").getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
         )
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
 
         // Then
         assertThat(userRepository.findAll()).hasSize(1);

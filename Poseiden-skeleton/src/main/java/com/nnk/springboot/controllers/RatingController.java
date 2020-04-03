@@ -25,16 +25,26 @@ public class RatingController {
     }
 
     @GetMapping("/rating/add")
-    public String addRatingForm(Rating rating, Model model) {
+    public String addRatingForm(Model model) {
         model.addAttribute("rating", new Rating());
         return "rating/add";
     }
 
     @PostMapping("/rating/validate")
-    public String validate(@Valid @RequestBody Rating rating, BindingResult result, Model model) {
+    public String validate(@Valid Rating rating, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Rating list
         if (result.hasErrors()) {
             return "rating/add";
+        }
+        ratingService.updateRating(rating);
+        return "redirect:/rating/list";
+    }
+
+    @PostMapping("/rating/add/api")
+    public String addApi(@Valid @RequestBody Rating rating, BindingResult result) {
+        // TODO: check data valid and save to db, after saving return Rating list
+        if (result.hasErrors()) {
+            return "redirect:/rating/list";
         }
         ratingService.updateRating(rating);
         return "redirect:/rating/list";
@@ -48,7 +58,7 @@ public class RatingController {
     }
 
     @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid @RequestBody Rating rating,
+    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result) {
         if (result.hasErrors()|| ratingService.findBidListbyID(id)==null) {
             return "redirect:/rating/list";
@@ -56,6 +66,17 @@ public class RatingController {
         rating.setId(id);
         ratingService.updateRating(rating);
         // TODO: check required fields, if valid call service to update Rating and return Rating list
+        return "redirect:/rating/list";
+    }
+
+    @PostMapping("/rating/update/api/{id}")
+    public String updateRatingApi(@PathVariable("id") Integer id, @Valid @RequestBody Rating rating,
+                               BindingResult result) {
+        if (result.hasErrors()|| ratingService.findBidListbyID(id)==null) {
+            return "redirect:/rating/list";
+        }
+        rating.setId(id);
+        ratingService.updateRating(rating);
         return "redirect:/rating/list";
     }
 

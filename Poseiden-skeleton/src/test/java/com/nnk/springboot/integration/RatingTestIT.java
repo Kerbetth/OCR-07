@@ -67,7 +67,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -100,7 +100,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -125,7 +125,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -148,7 +148,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -171,7 +171,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -184,7 +184,7 @@ public class RatingTestIT {
         rating.setMoodysRating("moody2");
         rating.setSandPRating("sand2");
         body = (new ObjectMapper()).valueToTree(rating).toString();
-        mvc.perform(post("/rating/update/"+ ratingRepository.findAll().get(0).getId())
+        mvc.perform(post("/rating/update/api/"+ ratingRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -205,7 +205,7 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/validate")
+        mvc.perform(post("/rating/add/api")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
@@ -218,7 +218,7 @@ public class RatingTestIT {
         rating.setMoodysRating("moody2");
         rating.setSandPRating("sand2");
         body = (new ObjectMapper()).valueToTree(rating).toString();
-        mvc.perform(post("/rating/update/10")
+        mvc.perform(post("/rating/update/api/10")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(body)
