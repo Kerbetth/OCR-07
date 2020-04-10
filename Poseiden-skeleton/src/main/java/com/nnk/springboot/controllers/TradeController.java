@@ -1,8 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.Trade;
-import com.nnk.springboot.services.BidService;
 import com.nnk.springboot.services.TradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,19 +41,10 @@ public class TradeController {
         return "redirect:/trade/list";
     }
 
-    @PostMapping("/trade/add/api")
-    public String validateApi(@Valid @RequestBody Trade trade, BindingResult result) {
-        if (result.hasErrors()) {
-            return "redirect:/trade/list";
-        }
-        tradeService.updateTrade(trade);
-        return "redirect:/trade/list";
-    }
-
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get Trade by Id and to model then show to the form
-        Trade trade = tradeService.findTradebyID(id);
+        Trade trade = tradeService.findTradeByID(id);
         model.addAttribute("trade", trade);
         return "trade/update";
     }
@@ -64,18 +53,7 @@ public class TradeController {
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Trade and return Trade list
-        if (result.hasErrors()||tradeService.findTradebyID(id)==null) {
-            return "redirect:/trade/list";
-        }
-        tradeService.updateTrade(trade);
-        return "redirect:/trade/list";
-    }
-
-    @PostMapping("/trade/update/api/{id}")
-    public String updateTradeApi(@PathVariable("id") Integer id, @Valid @RequestBody Trade trade,
-                              BindingResult result) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
-        if (result.hasErrors()||tradeService.findTradebyID(id)==null) {
+        if (result.hasErrors()||tradeService.findTradeByID(id)==null) {
             return "redirect:/trade/list";
         }
         tradeService.updateTrade(trade);
@@ -85,7 +63,7 @@ public class TradeController {
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id) {
         // TODO: Find Trade by Id and delete the Trade, return to Trade list
-        if (tradeService.findTradebyID(id)==null) {
+        if (tradeService.findTradeByID(id)==null) {
             return "redirect:/trade/list";
         }
         tradeService.deleteTrade(id);

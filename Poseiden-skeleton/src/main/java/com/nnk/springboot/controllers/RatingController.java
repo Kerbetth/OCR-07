@@ -40,27 +40,17 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
-    @PostMapping("/rating/add/api")
-    public String addApi(@Valid @RequestBody Rating rating, BindingResult result) {
-        // TODO: check data valid and save to db, after saving return Rating list
-        if (result.hasErrors()) {
-            return "redirect:/rating/list";
-        }
-        ratingService.updateRating(rating);
-        return "redirect:/rating/list";
-    }
-
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get Rating by Id and to model then show to the form
-        model.addAttribute("rating", ratingService.findBidListbyID(id));
+        model.addAttribute("rating", ratingService.findRatingByID(id));
         return "rating/update";
     }
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
                              BindingResult result) {
-        if (result.hasErrors()|| ratingService.findBidListbyID(id)==null) {
+        if (result.hasErrors()|| ratingService.findRatingByID(id)==null) {
             return "redirect:/rating/list";
         }
         rating.setId(id);
@@ -69,20 +59,9 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
-    @PostMapping("/rating/update/api/{id}")
-    public String updateRatingApi(@PathVariable("id") Integer id, @Valid @RequestBody Rating rating,
-                               BindingResult result) {
-        if (result.hasErrors()|| ratingService.findBidListbyID(id)==null) {
-            return "redirect:/rating/list";
-        }
-        rating.setId(id);
-        ratingService.updateRating(rating);
-        return "redirect:/rating/list";
-    }
-
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id) {
-        if (ratingService.findBidListbyID(id)==null) {
+        if (ratingService.findRatingByID(id)==null) {
             return "redirect:/rating/list";
         }
         ratingService.deleteRating(id);

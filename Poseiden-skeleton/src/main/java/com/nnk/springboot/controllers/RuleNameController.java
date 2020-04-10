@@ -1,8 +1,6 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.RuleName;
-import com.nnk.springboot.services.RatingService;
 import com.nnk.springboot.services.RuleNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,20 +41,10 @@ public class RuleNameController {
         return "redirect:/ruleName/list";
     }
 
-    @PostMapping("/ruleName/add/api")
-    public String addApi(@Valid @RequestBody RuleName ruleName, BindingResult result) {
-        // TODO: check data valid and save to db, after saving return RuleName list
-        if (result.hasErrors()) {
-            return "redirect:/ruleName/list";
-        }
-        ruleNameService.updateRuleName(ruleName);
-        return "redirect:/ruleName/list";
-    }
-
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get RuleName by Id and to model then show to the form
-        model.addAttribute("ruleName", ruleNameService.findBidListbyID(id));
+        model.addAttribute("ruleName", ruleNameService.findRuleNameByID(id));
         return "ruleName/update";
     }
 
@@ -65,20 +53,9 @@ public class RuleNameController {
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        if (result.hasErrors()||ruleNameService.findBidListbyID(id)==null) {
+        if (result.hasErrors()||ruleNameService.findRuleNameByID(id)==null) {
             return "ruleName/update";
         }
-        ruleNameService.updateRuleName(ruleName);
-        return "redirect:/ruleName/list";
-    }
-
-    @PostMapping("/ruleName/update/api/{id}")
-    public String updateRuleNameApi(@PathVariable("id") Integer id, @Valid @RequestBody RuleName ruleName,
-                                 BindingResult result) {
-        if (result.hasErrors()||ruleNameService.findBidListbyID(id)==null) {
-            return "redirect:/ruleName/list";
-        }
-        ruleName.setId(id);
         ruleNameService.updateRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
@@ -86,7 +63,7 @@ public class RuleNameController {
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id) {
         // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
-        if (ruleNameService.findBidListbyID(id)==null) {
+        if (ruleNameService.findRuleNameByID(id)==null) {
             return "redirect:/ruleName/list";
         }
         ruleNameService.deleteRuleName(id);

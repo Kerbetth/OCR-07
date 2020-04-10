@@ -21,7 +21,7 @@ public class TradeService {
         List<Trade> rating = tradeRepository.findAll();
         return rating;
     }
-    public Trade findTradebyID(Integer id){
+    public Trade findTradeByID(Integer id){
         if (tradeRepository.findById(id).isPresent()) {
             Trade trade = tradeRepository.findById(id).get();
             return trade;

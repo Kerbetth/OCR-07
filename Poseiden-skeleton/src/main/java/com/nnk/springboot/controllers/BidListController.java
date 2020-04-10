@@ -42,16 +42,6 @@ public class BidListController {
         return "redirect:/bidList/list";
     }
 
-    @PostMapping("/bidList/validate/api")
-    public String validateApi(@Valid @RequestBody BidList bid, BindingResult result) {
-        if (result.hasErrors()) {
-            return "bidList/add";
-        }
-        bidService.updateBidlist(bid);
-        // TODO: check data valid and save to db, after saving return bid list
-        return "redirect:/bidList/list";
-    }
-
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get Bid by Id and to model then show to the form
@@ -69,17 +59,6 @@ public class BidListController {
         bidService.updateBidlist(bidList);
         return "redirect:/bidList/list";
     }
-
-    @PostMapping("/bidList/update/api/{id}")
-    public String updateBidApi(@PathVariable("id") Integer id, @Valid @RequestBody BidList bidList, BindingResult result) {
-        if (result.hasErrors() || bidService.findBidListbyID(id)==null) {
-            return "redirect:/bidList/list";
-        }
-        bidList.setBidListId(id);
-        bidService.updateBidlist(bidList);
-        return "redirect:/bidList/list";
-    }
-
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {

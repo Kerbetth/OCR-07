@@ -20,7 +20,7 @@ public class RuleNameService {
         List<RuleName> ruleNameList = ruleNameRepository.findAll();
         return ruleNameList;
     }
-    public RuleName findBidListbyID(Integer id) {
+    public RuleName findRuleNameByID(Integer id) {
         if (ruleNameRepository.findById(id).isPresent()) {
             RuleName ruleName = ruleNameRepository.findById(id).get();
             return ruleName;

@@ -20,7 +20,7 @@ public class RatingService {
         List<Rating> rating = ratingRepository.findAll();
         return rating;
     }
-    public Rating findBidListbyID(Integer id){
+    public Rating findRatingByID(Integer id){
         if (ratingRepository.findById(id).isPresent()) {
             Rating rating = ratingRepository.findById(id).get();
             return rating;
