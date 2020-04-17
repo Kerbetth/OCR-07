@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-@Controller
+@RestController
 public class BidListApiController {
 
     @Autowired
@@ -30,12 +30,8 @@ public class BidListApiController {
     }
 
     @GetMapping("/bidListAPI/{id}")
-    public String readBid(@PathVariable("id") Integer id) throws JsonProcessingException {
-        if (bidService.findBidListbyID(id) == null) {
-            return "No bibList with this ID";
-        }
-        ObjectMapper Obj = new ObjectMapper();
-        return Obj.writeValueAsString(bidService.findBidListbyID(id));
+    public BidList readBid(@PathVariable("id") Integer id) {
+        return bidService.findBidListbyID(id);
     }
 
     @PutMapping("/bidListAPI/{id}")
@@ -51,8 +47,8 @@ public class BidListApiController {
         }
     }
 
-    @DeleteMapping("/bidListAPI/{id}")
-    public String deleteBid(@PathVariable("id") Integer id) {
+    @DeleteMapping(value = "/bidListAPI/{id}")
+    public String deleteBid(@PathVariable Integer id) {
         if (bidService.findBidListbyID(id) == null) {
             return "No bibList with this ID";
         }

@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
-@Controller
+@RestController
+@RequestMapping
 public class RuleNameApiController {
 
     @Autowired
