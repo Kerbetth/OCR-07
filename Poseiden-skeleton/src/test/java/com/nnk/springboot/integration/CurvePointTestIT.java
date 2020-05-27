@@ -56,7 +56,7 @@ public class CurvePointTestIT {
         curvePoint = new CurvePoint();
         when(result.hasErrors()).thenReturn(false);
     }
-    
+
 
     @Test
     public void generateAddCurvePointFormWithSuccess() throws Exception {
@@ -78,14 +78,17 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
-        mvc.perform(get("/curvePoint/update/"+curvePointRepository.findAll().get(0).getId())
+        mvc.perform(get("/curvePoint/update/" + curvePointRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("accountName", "account1")
                 .content("curvePoint")
@@ -93,7 +96,7 @@ public class CurvePointTestIT {
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/update"));
     }
-    
+
     @Test
     public void addGoodCurvePoint() throws Exception {
         // Given
@@ -104,10 +107,13 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -116,6 +122,7 @@ public class CurvePointTestIT {
         assertThat(curvePointRepository.findAll()).hasSize(1);
         assertThat(curvePointRepository.findAll().get(0).getTerm()).isEqualTo(10.5);
     }
+
     @Test
     public void deleteCurvePoint() throws Exception {
         // Given
@@ -126,13 +133,16 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
-        mvc.perform(get("/curvePoint/delete/"+curvePointRepository.findAll().get(0).getId())
+        mvc.perform(get("/curvePoint/delete/" + curvePointRepository.findAll().get(0).getId())
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -150,10 +160,13 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/curvePoint/delete/10")
@@ -173,10 +186,13 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -186,10 +202,13 @@ public class CurvePointTestIT {
         curvePoint.setTerm(15.5);
         curvePoint.setValue(20.5);
         body = (new ObjectMapper()).valueToTree(curvePoint).toString();
-        mvc.perform(post("/curvePoint/update/api/"+curvePointRepository.findAll().get(0).getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/update//" + curvePointRepository.findAll().get(0).getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","15.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -207,10 +226,13 @@ public class CurvePointTestIT {
         String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
-        mvc.perform(post("/curvePoint/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","10.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -220,12 +242,15 @@ public class CurvePointTestIT {
         curvePoint.setTerm(15.5);
         curvePoint.setValue(20.5);
         body = (new ObjectMapper()).valueToTree(curvePoint).toString();
-        mvc.perform(post("/curvePoint/update/api/10")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/curvePoint/update//10")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("curveID","1")
+                .param("term","15.5")
+                .param("value", "20.5")
+                .requestAttr("curvePoint", curvePoint)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
 
         // Then
         assertThat(curvePointRepository.findAll()).hasSize(1);

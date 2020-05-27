@@ -34,7 +34,8 @@ public class BidListController {
 
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidList bid, BindingResult result) {
-        if (result.hasErrors()) {
+        //System.out.println(bid.getBidListId() + bid.getBidQuantity() + bid.getAccount());
+       if (result.hasErrors()) {
             return "bidList/add";
         }
         bidService.updateBidlist(bid);

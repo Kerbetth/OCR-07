@@ -67,10 +67,14 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -84,8 +88,12 @@ public class RatingTestIT {
     public void generateAddRatingFormWithSuccess() throws Exception {
         mvc.perform(get("/rating/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("accountName", "account1")
-                .content("rating")
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/add"));
@@ -100,17 +108,25 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         mvc.perform(get("/rating/update/"+ ratingRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("accountName", "account1")
-                .content("rating")
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/update"));
@@ -125,10 +141,14 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/rating/delete/"+ ratingRepository.findAll().get(0).getId())
@@ -148,10 +168,14 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/rating/delete/10")
@@ -171,10 +195,14 @@ public class RatingTestIT {
         String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -184,10 +212,14 @@ public class RatingTestIT {
         rating.setMoodysRating("moody2");
         rating.setSandPRating("sand2");
         body = (new ObjectMapper()).valueToTree(rating).toString();
-        mvc.perform(post("/rating/update/api/"+ ratingRepository.findAll().get(0).getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/update//"+ ratingRepository.findAll().get(0).getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch2")
+                .param("moodysRating", "moody2")
+                .param("sandPRating", "sand2")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -202,13 +234,16 @@ public class RatingTestIT {
         rating.setFitchRating("fitch");
         rating.setMoodysRating("moody");
         rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
-        mvc.perform(post("/rating/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch")
+                .param("moodysRating", "moody")
+                .param("sandPRating", "sand")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -217,11 +252,14 @@ public class RatingTestIT {
         rating.setFitchRating("fitch2");
         rating.setMoodysRating("moody2");
         rating.setSandPRating("sand2");
-        body = (new ObjectMapper()).valueToTree(rating).toString();
-        mvc.perform(post("/rating/update/api/10")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/rating/update//10")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("fitchRating","fitch2")
+                .param("moodysRating", "moody2")
+                .param("sandPRating", "sand2")
+                .requestAttr("rating", rating)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 

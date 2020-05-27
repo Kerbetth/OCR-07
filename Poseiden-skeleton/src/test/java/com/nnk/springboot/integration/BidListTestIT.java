@@ -64,13 +64,15 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -97,17 +99,19 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
-        mvc.perform(get("/bidList/update/"+ bidListRepository.findAll().get(0).getBidListId())
+        mvc.perform(get("/bidList/update/" + bidListRepository.findAll().get(0).getBidListId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("accountName", "account1")
                 .content("bidList")
@@ -122,16 +126,18 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
-        mvc.perform(get("/bidList/delete/"+ bidListRepository.findAll().get(0).getBidListId())
+        mvc.perform(get("/bidList/delete/" + bidListRepository.findAll().get(0).getBidListId())
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -145,13 +151,15 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/bidList/delete/10")
@@ -168,13 +176,15 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -183,11 +193,14 @@ public class BidListTestIT {
         bidList.setAccount("account2");
         bidList.setType("type2");
         bidList.setBidQuantity(15.5);
-        body = (new ObjectMapper()).valueToTree(bidList).toString();
-        mvc.perform(post("/bidList/update/api/"+ bidListRepository.findAll().get(0).getBidListId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+
+        mvc.perform(post("/bidList/update/" + bidListRepository.findAll().get(0).getBidListId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account2")
+                .param("type","type2")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -202,13 +215,15 @@ public class BidListTestIT {
         bidList.setAccount("account");
         bidList.setType("type1");
         bidList.setBidQuantity(15.5);
-        String body = (new ObjectMapper()).valueToTree(bidList).toString();
 
         // When
-        mvc.perform(post("/bidList/validate/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/bidList/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account")
+                .param("type","type1")
+                .param("bidQuantity", "15.5")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -217,13 +232,16 @@ public class BidListTestIT {
         bidList.setAccount("account2");
         bidList.setType("type2");
         bidList.setBidQuantity(20.0);
-        body = (new ObjectMapper()).valueToTree(bidList).toString();
-        mvc.perform(post("/bidList/update/api/10")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+
+        mvc.perform(post("/bidList/update/10")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("account","account2")
+                .param("type","type2")
+                .param("bidQuantity", "20.0")
+                .requestAttr("bidList", bidList)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().isOk());
 
         // Then
         assertThat(bidListRepository.findAll()).hasSize(1);

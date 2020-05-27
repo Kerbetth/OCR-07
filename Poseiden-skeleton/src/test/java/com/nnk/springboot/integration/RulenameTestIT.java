@@ -62,16 +62,17 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("usual description");
         ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
-
 
         // Then
         assertThat(ruleNameRepository.findAll()).hasSize(1);
@@ -82,8 +83,11 @@ public class RulenameTestIT {
     public void generateAddRuleNameFormWithSuccess() throws Exception {
         mvc.perform(get("/ruleName/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("accountName", "account1")
-                .content("ruleName")
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/add"));
@@ -98,17 +102,23 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         mvc.perform(get("/ruleName/update/"+ ruleNameRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("accountName", "account1")
-                .content("ruleName")
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/update"));
@@ -123,10 +133,13 @@ public class RulenameTestIT {
         String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/ruleName/delete/"+ ruleNameRepository.findAll().get(0).getId())
@@ -143,13 +156,15 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("usual description");
         ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/ruleName/delete/10")
@@ -166,13 +181,15 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("usual description");
         ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -181,11 +198,13 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("another usual description");
         ruleName.setName("name");
-        body = (new ObjectMapper()).valueToTree(ruleName).toString();
-        mvc.perform(post("/ruleName/update/api/"+ ruleNameRepository.findAll().get(0).getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/update/"+ ruleNameRepository.findAll().get(0).getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","another usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -200,13 +219,15 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("usual description");
         ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
-        mvc.perform(post("/ruleName/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -215,11 +236,13 @@ public class RulenameTestIT {
         ruleName.setJson("jsonFeature");
         ruleName.setDescription("another usual description");
         ruleName.setName("name");
-        body = (new ObjectMapper()).valueToTree(ruleName).toString();
-        mvc.perform(post("/ruleName/update/api/10")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/ruleName/update/10")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("json","jsonFeature")
+                .param("description","usual description")
+                .param("name", "name")
+                .requestAttr("ruleName", ruleName)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 

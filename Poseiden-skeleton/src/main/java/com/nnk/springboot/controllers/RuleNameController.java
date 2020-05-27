@@ -1,6 +1,7 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.RuleNameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,7 +54,7 @@ public class RuleNameController {
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        if (result.hasErrors()||ruleNameService.findRuleNameByID(id)==null) {
+        if (result.hasErrors() || ruleNameService.findRuleNameByID(id)==null) {
             return "ruleName/update";
         }
         ruleNameService.updateRuleName(ruleName);

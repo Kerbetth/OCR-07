@@ -54,7 +54,7 @@ public class TradeController {
                              BindingResult result) {
         // TODO: check required fields, if valid call service to update Trade and return Trade list
         if (result.hasErrors()||tradeService.findTradeByID(id)==null) {
-            return "redirect:/trade/list";
+            return "trade/update";
         }
         tradeService.updateTrade(trade);
         return "redirect:/trade/list";

@@ -89,20 +89,23 @@ public class UserTestIT {
         user.setFullname("A User");
         user.setUsername("User");
         user.setRole("USER");
-        String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/user/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("brutePassword","StrongPass0!")
+                .param("fullname","A User")
+                .param("username", "user")
+                .param("role", "USER")
+                .requestAttr("user", user)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
 
         // Then
         assertThat(userRepository.findAll()).hasSize(1);
-        assertThat(userRepository.findAll().get(0).getUsername()).isEqualTo("User");
+        assertThat(userRepository.findAll().get(0).getUsername()).isEqualTo("user");
         assertThat(userRepository.findAll().get(0).getFullname()).isEqualTo("A User");
     }
 
@@ -113,16 +116,19 @@ public class UserTestIT {
         user.setFullname("A User");
         user.setUsername("User");
         user.setRole("USER");
-        String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/user/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("brutePassword","StrongPass0!")
+                .param("fullname","A User")
+                .param("username", "user")
+                .param("role", "USER")
+                .requestAttr("user", user)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
-        mvc.perform(get("/user/delete/" + userRepository.findByUserName("User").getId())
+        mvc.perform(get("/user/delete/" + userRepository.findByUserName("user").getId())
         )
                 .andExpect(redirectedUrl("/user/list"));
 
@@ -137,13 +143,16 @@ public class UserTestIT {
         user.setFullname("A User");
         user.setUsername("User");
         user.setRole("USER");
-        String body = (new ObjectMapper()).valueToTree(user).toString();
 
         // When
-        mvc.perform(post("/user/add/api")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/user/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("brutePassword","StrongPass0!")
+                .param("fullname","A User")
+                .param("username", "user")
+                .param("role", "USER")
+                .requestAttr("user", user)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -151,11 +160,14 @@ public class UserTestIT {
         user.setFullname("A User");
         user.setUsername("ANewUser");
         user.setRole("USER");
-        body = (new ObjectMapper()).valueToTree(user).toString();
-        mvc.perform(post("/user/update/api/" + userRepository.findByUserName("User").getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(body)
+        mvc.perform(post("/user/update/" + userRepository.findByUserName("user").getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("brutePassword","AnotherStrongPass0!")
+                .param("fullname","A User")
+                .param("username", "ANewUser")
+                .param("role", "USER")
+                .requestAttr("user", user)
+                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
