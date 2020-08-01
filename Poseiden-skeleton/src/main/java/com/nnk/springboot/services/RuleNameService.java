@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -17,21 +18,35 @@ public class RuleNameService {
     private RuleNameRepository ruleNameRepository;
 
     public List<RuleName> loadAllRating(){
-        List<RuleName> ruleNameList = ruleNameRepository.findAll();
-        return ruleNameList;
+        return ruleNameRepository.findAll();
     }
     public RuleName findRuleNameByID(Integer id) {
         if (ruleNameRepository.findById(id).isPresent()) {
-            RuleName ruleName = ruleNameRepository.findById(id).get();
-            return ruleName;
+            return ruleNameRepository.findById(id).get();
         } else
             log.error("No RuleName found with this id");
         return null;
     }
+
+    public void addRuleName(RuleName ruleName){
+        if (!ruleNameRepository.findById(ruleName.getId()).isPresent()) {
+            ruleNameRepository.save(ruleName);
+        } else
+            log.error("A RuleName already exist with this id");
+    }
+
     public void updateRuleName(RuleName ruleName){
-        ruleNameRepository.save(ruleName);
+        if (ruleNameRepository.findById(ruleName.getId()).isPresent()) {
+            ruleNameRepository.save(ruleName);
+        } else
+            log.error("No RuleName found with this id");
     }
     public void deleteRuleName(Integer id){
-        ruleNameRepository.delete(ruleNameRepository.findById(id).get());
+        Optional<RuleName> optionalRuleName = ruleNameRepository.findById(id);
+        if (optionalRuleName.isPresent()) {
+            ruleNameRepository.delete(optionalRuleName.get());
+        }else
+            log.error("No RuleName found with this id");
+
     }
 }

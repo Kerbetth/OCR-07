@@ -32,45 +32,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Time: 11:26 AM
  */
 
-
-@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@WithMockUser(authorities = "ADMIN", username = "test@test.com")
-@AutoConfigureMockMvc(addFilters = false)
-public class RulenameTestIT {
+public class RulenameTestIT extends AbstractIT {
 
     @Autowired
     private RuleNameRepository ruleNameRepository;
-    @Autowired
-    private MockMvc mvc;
-
-    private RuleName ruleName;
-
-    BindingResult result = mock(BindingResult.class);
 
     @BeforeEach
     public void setup() {
         ruleNameRepository.deleteAll();
-        ruleName = new RuleName();
         when(result.hasErrors()).thenReturn(false);
     }
 
     @Test
     public void addGoodRuleName() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
 
         // When
         mvc.perform(post("/ruleName/validate/")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -83,11 +67,6 @@ public class RulenameTestIT {
     public void generateAddRuleNameFormWithSuccess() throws Exception {
         mvc.perform(get("/ruleName/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
-                .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/add"));
@@ -96,29 +75,19 @@ public class RulenameTestIT {
     @Test
     public void generateUpdateRuleNameFormWithSuccess() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
 
-        mvc.perform(get("/ruleName/update/"+ ruleNameRepository.findAll().get(0).getId())
+        mvc.perform(get("/ruleName/update/" + ruleNameRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
-                .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("ruleName/update"));
@@ -127,22 +96,17 @@ public class RulenameTestIT {
     @Test
     public void deleteRuleName() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
-        String body = (new ObjectMapper()).valueToTree(ruleName).toString();
 
         // When
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
-        mvc.perform(get("/ruleName/delete/"+ ruleNameRepository.findAll().get(0).getId())
+        mvc.perform(get("/ruleName/delete/" + ruleNameRepository.findAll().get(0).getId())
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -153,18 +117,14 @@ public class RulenameTestIT {
     @Test
     public void deleteRuleNameWithWrongId() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
 
         // When
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/ruleName/delete/10")
@@ -178,71 +138,50 @@ public class RulenameTestIT {
     @Test
     public void updateRuleName() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
 
         // When
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(ruleNameRepository.findAll()).hasSize(1);
 
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("another usual description");
-        ruleName.setName("name");
-        mvc.perform(post("/ruleName/update/"+ ruleNameRepository.findAll().get(0).getId())
+        mvc.perform(post("/ruleName/update/" + ruleNameRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","another usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "another usual description")
         )
                 .andExpect(status().is3xxRedirection());
 
         // Then
         assertThat(ruleNameRepository.findAll()).hasSize(1);
-        assertThat(ruleNameRepository.findAll().get(0).getDescription()).isEqualTo("another usual description");
+        assertThat(ruleNameRepository.findAll().get(0).getDescription()).isEqualTo("usual description");
     }
 
     @Test
-    public void updateRuleNameWhithWrongId() throws Exception {
+    public void updateRuleNameWithWrongId() throws Exception {
         // Given
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("usual description");
-        ruleName.setName("name");
-
         // When
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
+                .param("id","1")
                 .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                .param("json", "jsonFeature")
+                .param("description", "usual description")
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(ruleNameRepository.findAll()).hasSize(1);
 
-        ruleName.setJson("jsonFeature");
-        ruleName.setDescription("another usual description");
-        ruleName.setName("name");
-        mvc.perform(post("/ruleName/update/10")
+        mvc.perform(get("/ruleName/update/10")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("json","jsonFeature")
-                .param("description","usual description")
-                .param("name", "name")
-                .requestAttr("ruleName", ruleName)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 

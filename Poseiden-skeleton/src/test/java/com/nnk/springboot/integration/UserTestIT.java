@@ -39,66 +39,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@WithMockUser(authorities = "ADMIN", username = "test@test.com")
-@AutoConfigureMockMvc(addFilters = false)
-public class UserTestIT {
+public class UserTestIT extends AbstractIT{
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserController userController;
-    @Autowired
-    private MockMvc mvc;
-
-    private User user;
 
     BindingResult result = mock(BindingResult.class);
 
     @BeforeEach
     public void setup() {
         userRepository.deleteAll();
-        user = new User();
         when(result.hasErrors()).thenReturn(false);
-    }
-
-    @Test
-    public void addAUserAccountSuccessfully() {
-        // Given
-
-        user.setId(1);
-        user.setBrutePassword("StrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("A User");
-        user.setRole("USER");
-
-        // When
-        userController.validate(user, result);
-
-        // Then
-        assertThat(userRepository.findAll()).hasSize(1);
     }
 
     @Test
     public void createGoodAccount() throws Exception {
         // Given
-        user.setId(1);
-        user.setBrutePassword("StrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("User");
-        user.setRole("USER");
 
         // When
         mvc.perform(post("/user/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("brutePassword","StrongPass0!")
-                .param("fullname","A User")
-                .param("username", "user")
+                .param("id","1")
+                .param("brutPassword","StrongPass0!")
+                .param("username","user")
+                .param("fullname","A user")
                 .param("role", "USER")
-                .requestAttr("user", user)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -106,26 +72,21 @@ public class UserTestIT {
         // Then
         assertThat(userRepository.findAll()).hasSize(1);
         assertThat(userRepository.findAll().get(0).getUsername()).isEqualTo("user");
-        assertThat(userRepository.findAll().get(0).getFullname()).isEqualTo("A User");
+        assertThat(userRepository.findAll().get(0).getFullname()).isEqualTo("A user");
     }
 
     @Test
     public void deleteAccount() throws Exception {
         // Given
-        user.setBrutePassword("StrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("User");
-        user.setRole("USER");
 
         // When
         mvc.perform(post("/user/validate/")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("brutePassword","StrongPass0!")
-                .param("fullname","A User")
-                .param("username", "user")
-                .param("role", "USER")
-                .requestAttr("user", user)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("id","1")
+                        .param("brutPassword","StrongPass0!")
+                        .param("username","user")
+                        .param("fullname","user")
+                        .param("role", "USER")
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/user/delete/" + userRepository.findByUserName("user").getId())
@@ -139,39 +100,30 @@ public class UserTestIT {
     @Test
     public void updateAccount() throws Exception {
         // Given
-        user.setBrutePassword("StrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("User");
-        user.setRole("USER");
 
         // When
         mvc.perform(post("/user/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("brutePassword","StrongPass0!")
-                .param("fullname","A User")
-                .param("username", "user")
+                .param("id","1")
+                .param("brutPassword","StrongPass0!")
+                .param("username","user")
+                .param("fullname","user")
                 .param("role", "USER")
-                .requestAttr("user", user)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
-        user.setBrutePassword("AnotherStrongPass0!");
-        user.setFullname("A User");
-        user.setUsername("ANewUser");
-        user.setRole("USER");
         mvc.perform(post("/user/update/" + userRepository.findByUserName("user").getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("brutePassword","AnotherStrongPass0!")
-                .param("fullname","A User")
-                .param("username", "ANewUser")
+                .param("id","1")
+                .param("brutPassword","StrongPass0!")
+                .param("username","user")
+                .param("fullname","userFull")
                 .param("role", "USER")
-                .requestAttr("user", user)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         // Then
         assertThat(userRepository.findAll()).hasSize(1);
+        assertThat(userRepository.findByUserName("user").getFullname()).isEqualTo("userFull");
     }
 }

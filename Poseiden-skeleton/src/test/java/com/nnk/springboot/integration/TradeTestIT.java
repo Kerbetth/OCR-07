@@ -32,45 +32,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Time: 11:26 AM
  */
 
-
-@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@WithMockUser(authorities = "ADMIN", username = "test@test.com")
-@AutoConfigureMockMvc(addFilters = false)
-public class TradeTestIT {
+public class TradeTestIT extends AbstractIT{
 
     @Autowired
     private TradeRepository tradeRepository;
-    @Autowired
-    private MockMvc mvc;
 
-    private Trade trade;
 
     BindingResult result = mock(BindingResult.class);
 
     @BeforeEach
     public void setup() {
         tradeRepository.deleteAll();
-        trade = new Trade();
         when(result.hasErrors()).thenReturn(false);
     }
 
     @Test
     public void addGoodTrade() throws Exception {
         // Given
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
+
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -83,11 +71,10 @@ public class TradeTestIT {
     public void generateAddTradeFormWithSuccess() throws Exception {
         mvc.perform(get("/trade/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/add"));
@@ -96,29 +83,19 @@ public class TradeTestIT {
     @Test
     public void generateUpdateTradeFormWithSuccess() throws Exception {
         // Given
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
-        String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         mvc.perform(get("/trade/update/"+ tradeRepository.findAll().get(0).getTradeId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("type","jsonFeature")
-                .param("account","another usual description")
-                .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("trade/update"));
@@ -127,19 +104,15 @@ public class TradeTestIT {
     @Test
     public void deleteTrade() throws Exception {
         // Given
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
-        String body = (new ObjectMapper()).valueToTree(trade).toString();
+
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/trade/delete/"+ tradeRepository.findAll().get(0).getTradeId())
@@ -153,19 +126,14 @@ public class TradeTestIT {
     @Test
     public void deleteTradeWithWrongId() throws Exception {
         // Given
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
-        String body = (new ObjectMapper()).valueToTree(trade).toString();
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/trade/delete/10")
@@ -179,35 +147,25 @@ public class TradeTestIT {
     @Test
     public void updateTrade() throws Exception {
         // Given
-        //trade.setTradeId(2);
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
-                .param("account","usual description")
+                .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(tradeRepository.findAll()).hasSize(1);
 
-        trade.setType("jsonFeature");
-        trade.setAccount("another usual description");
-        trade.setBuyQuantity(50.5);
-        trade.setTradeId(tradeRepository.findAll().get(0).getTradeId());
         mvc.perform(post("/trade/update/"+ tradeRepository.findAll().get(0).getTradeId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         // Then
@@ -216,35 +174,27 @@ public class TradeTestIT {
     }
 
     @Test
-    public void updateTradeWhithWrongId() throws Exception {
+    public void updateTradeWithWrongId() throws Exception {
         // Given
-        trade.setType("jsonFeature");
-        trade.setAccount("usual description");
-        trade.setBuyQuantity(50.5);
 
         // When
         mvc.perform(post("/trade/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(tradeRepository.findAll()).hasSize(1);
 
-        trade.setType("jsonFeature");
-        trade.setAccount("another usual description");
-        trade.setBuyQuantity(50.5);
         mvc.perform(post("/trade/update/10")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
-                .requestAttr("trade", trade)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk());
 

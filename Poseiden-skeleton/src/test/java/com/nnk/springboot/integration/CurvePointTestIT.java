@@ -34,26 +34,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@WithMockUser(authorities = "ADMIN", username = "test@test.com")
-@AutoConfigureMockMvc(addFilters = false)
-public class CurvePointTestIT {
+public class CurvePointTestIT extends AbstractIT {
 
     @Autowired
     private CurvePointRepository curvePointRepository;
-    @Autowired
-    private MockMvc mvc;
 
-    private CurvePoint curvePoint;
 
     BindingResult result = mock(BindingResult.class);
 
     @BeforeEach
     public void setup() {
         curvePointRepository.deleteAll();
-        curvePoint = new CurvePoint();
         when(result.hasErrors()).thenReturn(false);
     }
 
@@ -62,8 +54,6 @@ public class CurvePointTestIT {
     public void generateAddCurvePointFormWithSuccess() throws Exception {
         mvc.perform(get("/curvePoint/add")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("accountName", "account1")
-                .content("curvePoint")
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("curvePoint/add"));
@@ -72,19 +62,14 @@ public class CurvePointTestIT {
     @Test
     public void generateUpdateCurvePointFormWithSuccess() throws Exception {
         // Given
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -100,20 +85,14 @@ public class CurvePointTestIT {
     @Test
     public void addGoodCurvePoint() throws Exception {
         // Given
-        curvePoint.setId(1);
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -126,20 +105,14 @@ public class CurvePointTestIT {
     @Test
     public void deleteCurvePoint() throws Exception {
         // Given
-        curvePoint.setId(1);
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/curvePoint/delete/" + curvePointRepository.findAll().get(0).getId())
@@ -153,20 +126,14 @@ public class CurvePointTestIT {
     @Test
     public void deleteCurvePointWithWrongId() throws Exception {
         // Given
-        curvePoint.setId(1);
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/curvePoint/delete/10")
@@ -180,35 +147,26 @@ public class CurvePointTestIT {
     @Test
     public void updateCurvePoint() throws Exception {
         // Given
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(curvePointRepository.findAll()).hasSize(1);
 
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(15.5);
-        curvePoint.setValue(20.5);
-        body = (new ObjectMapper()).valueToTree(curvePoint).toString();
         mvc.perform(post("/curvePoint/update//" + curvePointRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","15.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -220,35 +178,25 @@ public class CurvePointTestIT {
     @Test
     public void updateCurvePointWhithWrongId() throws Exception {
         // Given
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(10.5);
-        curvePoint.setValue(20.5);
-        String body = (new ObjectMapper()).valueToTree(curvePoint).toString();
 
         // When
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","10.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(curvePointRepository.findAll()).hasSize(1);
 
-        curvePoint.setCurveID(1);
-        curvePoint.setTerm(15.5);
-        curvePoint.setValue(20.5);
-        body = (new ObjectMapper()).valueToTree(curvePoint).toString();
         mvc.perform(post("/curvePoint/update//10")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
                 .param("curveID","1")
                 .param("term","15.5")
                 .param("value", "20.5")
-                .requestAttr("curvePoint", curvePoint)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk());
 

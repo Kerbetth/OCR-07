@@ -3,6 +3,7 @@ package com.nnk.springboot.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RatingRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,37 +35,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@ExtendWith(SpringExtension.class)
 @EnableAutoConfiguration
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-@WithMockUser(authorities = "ADMIN", username = "test@test.com")
-@AutoConfigureMockMvc(addFilters = false)
-public class RatingTestIT {
+public class RatingTestIT extends AbstractIT {
 
     @Autowired
     private RatingRepository ratingRepository;
-    @Autowired
-    private MockMvc mvc;
 
-    private Rating rating;
 
     BindingResult result = mock(BindingResult.class);
 
     @BeforeEach
     public void setup() {
         ratingRepository.deleteAll();
-        rating = new Rating();
         when(result.hasErrors()).thenReturn(false);
     }
 
     @Test
     public void addGoodRating() throws Exception {
         // Given
-        rating.setId(1);
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -73,8 +61,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -92,8 +78,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/add"));
@@ -102,10 +86,6 @@ public class RatingTestIT {
     @Test
     public void generateUpdateRatingFormWithSuccess() throws Exception {
         // Given
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -114,8 +94,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -125,8 +103,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().isOk())
                 .andExpect(view().name("rating/update"));
@@ -135,10 +111,6 @@ public class RatingTestIT {
     @Test
     public void deleteRating() throws Exception {
         // Given
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -147,8 +119,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/rating/delete/"+ ratingRepository.findAll().get(0).getId())
@@ -162,10 +132,6 @@ public class RatingTestIT {
     @Test
     public void deleteRatingWithWrongId() throws Exception {
         // Given
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -174,8 +140,6 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/rating/delete/10")
@@ -189,10 +153,6 @@ public class RatingTestIT {
     @Test
     public void updateRating() throws Exception {
         // Given
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
-        String body = (new ObjectMapper()).valueToTree(rating).toString();
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -201,25 +161,17 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(ratingRepository.findAll()).hasSize(1);
 
-        rating.setFitchRating("fitch2");
-        rating.setMoodysRating("moody2");
-        rating.setSandPRating("sand2");
-        body = (new ObjectMapper()).valueToTree(rating).toString();
         mvc.perform(post("/rating/update//"+ ratingRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")
                 .param("fitchRating","fitch2")
                 .param("moodysRating", "moody2")
                 .param("sandPRating", "sand2")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
@@ -229,11 +181,8 @@ public class RatingTestIT {
     }
 
     @Test
-    public void updateRatingWhithWrongId() throws Exception {
+    public void updateRatingWithWrongId() throws Exception {
         // Given
-        rating.setFitchRating("fitch");
-        rating.setMoodysRating("moody");
-        rating.setSandPRating("sand");
 
         // When
         mvc.perform(post("/rating/validate/")
@@ -242,24 +191,17 @@ public class RatingTestIT {
                 .param("fitchRating","fitch")
                 .param("moodysRating", "moody")
                 .param("sandPRating", "sand")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 
         assertThat(ratingRepository.findAll()).hasSize(1);
 
-        rating.setFitchRating("fitch2");
-        rating.setMoodysRating("moody2");
-        rating.setSandPRating("sand2");
         mvc.perform(post("/rating/update//10")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")
                 .param("fitchRating","fitch2")
                 .param("moodysRating", "moody2")
                 .param("sandPRating", "sand2")
-                .requestAttr("rating", rating)
-                .contentType(MediaType.APPLICATION_XHTML_XML)
         )
                 .andExpect(status().is3xxRedirection());
 

@@ -19,8 +19,7 @@ public class RuleNameController {
     RuleNameService ruleNameService;
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model)
-    {
+    public String home(Model model) {
         // TODO: find all RuleName, add to model
         model.addAttribute("ruleNameList", ruleNameService.loadAllRating());
         return "ruleName/list";
@@ -38,23 +37,28 @@ public class RuleNameController {
         if (result.hasErrors()) {
             return "ruleName/add";
         }
-        ruleNameService.updateRuleName(ruleName);
+        ruleNameService.addRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         // TODO: get RuleName by Id and to model then show to the form
-        model.addAttribute("ruleName", ruleNameService.findRuleNameByID(id));
-        return "ruleName/update";
+        RuleName ruleName = ruleNameService.findRuleNameByID(id);
+        if (ruleName != null) {
+            model.addAttribute("ruleName", ruleName);
+            return "ruleName/update";
+        } else {
+            return "redirect:/ruleName/list";
+        }
     }
 
 
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                             BindingResult result) {
+                                 BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        if (result.hasErrors() || ruleNameService.findRuleNameByID(id)==null) {
+        if (result.hasErrors() || ruleNameService.findRuleNameByID(id) == null) {
             return "ruleName/update";
         }
         ruleNameService.updateRuleName(ruleName);
@@ -64,7 +68,7 @@ public class RuleNameController {
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id) {
         // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
-        if (ruleNameService.findRuleNameByID(id)==null) {
+        if (ruleNameService.findRuleNameByID(id) == null) {
             return "redirect:/ruleName/list";
         }
         ruleNameService.deleteRuleName(id);
