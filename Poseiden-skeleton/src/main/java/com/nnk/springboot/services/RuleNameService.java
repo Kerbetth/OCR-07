@@ -24,7 +24,7 @@ public class RuleNameService {
         if (ruleNameRepository.findById(id).isPresent()) {
             return ruleNameRepository.findById(id).get();
         } else
-            log.error("No RuleName found with this id");
+            log.error("No RuleName found with id "+id);
         return null;
     }
 
@@ -32,21 +32,21 @@ public class RuleNameService {
         if (!ruleNameRepository.findById(ruleName.getId()).isPresent()) {
             ruleNameRepository.save(ruleName);
         } else
-            log.error("A RuleName already exist with this id");
+            log.error("A RuleName already exist with this id: "+ ruleName.getId());
     }
 
     public void updateRuleName(RuleName ruleName){
         if (ruleNameRepository.findById(ruleName.getId()).isPresent()) {
             ruleNameRepository.save(ruleName);
         } else
-            log.error("No RuleName found with this id");
+            log.error("No RuleName found with id "+ruleName.getId());
     }
     public void deleteRuleName(Integer id){
         Optional<RuleName> optionalRuleName = ruleNameRepository.findById(id);
         if (optionalRuleName.isPresent()) {
             ruleNameRepository.delete(optionalRuleName.get());
+            log.error("Rulename "+id+" has been deleted");
         }else
-            log.error("No RuleName found with this id");
-
+            log.error("No RuleName found with id "+id);
     }
 }

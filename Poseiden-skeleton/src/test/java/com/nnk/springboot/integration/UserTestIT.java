@@ -28,8 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Created by Khang Nguyen.
@@ -51,6 +50,15 @@ public class UserTestIT extends AbstractIT{
     public void setup() {
         userRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
+    }
+
+    @Test
+    public void generateAddUserFormWithSuccess() throws Exception {
+        mvc.perform(get("/user/add")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/add"));
     }
 
     @Test
@@ -95,6 +103,28 @@ public class UserTestIT extends AbstractIT{
 
         // Then
         assertThat(userRepository.findAll()).hasSize(0);
+    }
+
+    @Test
+    public void generateUpdateUserFormWithSuccess() throws Exception {
+        // Given
+
+        // When
+        mvc.perform(post("/user/validate/")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("id","1")
+                .param("brutPassword","StrongPass0!")
+                .param("username","user")
+                .param("fullname","user")
+                .param("role", "USER")
+        )
+                .andExpect(status().is3xxRedirection());
+
+        mvc.perform(get("/user/update/"+userRepository.findAll().get(0).getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        )
+                .andExpect(status().isOk())
+                .andExpect(view().name("user/update"));
     }
 
     @Test

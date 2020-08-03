@@ -40,17 +40,6 @@ public class UserController {
         return "user/add";
     }
 
-    @PostMapping("/user/add/api")
-    public String addApi(@Valid @RequestBody User user, BindingResult result) {
-        if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setEncodePassword(encoder.encode(user.getBrutePassword()));
-            userRepository.save(user);
-            return "redirect:/user/list";
-        }
-        return "user/add";
-    }
-
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -61,19 +50,6 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid User user,
-                             BindingResult result) {
-        if (!result.hasErrors()) {
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-            user.setEncodePassword(encoder.encode(user.getBrutePassword()));
-            user.setId(id);
-            userRepository.save(user);
-            return "redirect:/user/list";
-        }
-        return "user/update";
-    }
-
-    @PostMapping("/user/update/api/{id}")
-    public String updateUserApi(@PathVariable("id") Integer id, @Valid @RequestBody User user,
                              BindingResult result) {
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
