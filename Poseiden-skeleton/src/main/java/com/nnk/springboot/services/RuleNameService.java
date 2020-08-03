@@ -16,7 +16,10 @@ public class RuleNameService {
 
     @Autowired
     private RuleNameRepository ruleNameRepository;
-
+    
+    /**
+     * @return all the RuleName objects registered in the database
+     */
     public List<RuleName> loadAllRating(){
         return ruleNameRepository.findAll();
     }
@@ -27,20 +30,30 @@ public class RuleNameService {
             log.error("No RuleName found with id "+id);
         return null;
     }
-
+    
+    /**
+     * @return a specify RuleName object according to the Id
+     */
     public void addRuleName(RuleName ruleName){
         if (!ruleNameRepository.findById(ruleName.getId()).isPresent()) {
             ruleNameRepository.save(ruleName);
         } else
             log.error("A RuleName already exist with this id: "+ ruleName.getId());
     }
-
+    
+    /**
+     * update a RuleName in the database
+     */
     public void updateRuleName(RuleName ruleName){
         if (ruleNameRepository.findById(ruleName.getId()).isPresent()) {
             ruleNameRepository.save(ruleName);
         } else
             log.error("No RuleName found with id "+ruleName.getId());
     }
+
+    /**
+     * delete a RuleName in the database
+     */
     public void deleteRuleName(Integer id){
         Optional<RuleName> optionalRuleName = ruleNameRepository.findById(id);
         if (optionalRuleName.isPresent()) {

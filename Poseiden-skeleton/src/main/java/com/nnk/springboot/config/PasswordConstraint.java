@@ -6,12 +6,16 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import com.google.common.base.Joiner;
-
+/**
+ * PasswordConstraint verify the input password according to the 4 constraints set (between 8 and 30 characters, 1 uppercase, 1 number, 1 special)
+ *
+ */
 public class PasswordConstraint implements ConstraintValidator<ValidPassword, String> {
 
     @Override
     public void initialize(ValidPassword arg0) {
     }
+
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {

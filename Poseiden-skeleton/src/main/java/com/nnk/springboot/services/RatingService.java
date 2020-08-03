@@ -16,10 +16,17 @@ public class RatingService {
     @Autowired
     private RatingRepository ratingRepository;
 
+    /**
+     * @return all the Rating objects registered in the database
+     */
     public List<Rating> loadAllRating() {
         List<Rating> rating = ratingRepository.findAll();
         return rating;
     }
+
+    /**
+     * @return all the Rating objects registered in the database
+     */
     public Rating findRatingByID(Integer id){
         if (ratingRepository.findById(id).isPresent()) {
             Rating rating = ratingRepository.findById(id).get();
@@ -29,9 +36,16 @@ public class RatingService {
         return null;
     }
 
+    /**
+     * @return all the Rating objects registered in the database
+     */
     public void updateRating(Rating rating) {
         ratingRepository.save(rating);
     }
+
+    /**
+     * @return all the Rating objects registered in the database
+     */
     public void deleteRating(Integer id) {
         ratingRepository.delete(ratingRepository.findById(id).get());
     }

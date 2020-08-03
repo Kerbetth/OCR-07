@@ -14,6 +14,12 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+
+/**
+ * Security Config manage the different endpoints authorization access, the homepage and the user CRUD access are free
+ * but the rest needs to be authenticated (with User, or Admin role)
+ */
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled=true)

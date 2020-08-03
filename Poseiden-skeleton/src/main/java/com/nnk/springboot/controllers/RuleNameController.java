@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * These controllers manage CRUD operations with the RuleName object
+ * and generate a model for listing, adding and updating
+ */
 @Controller
 public class RuleNameController {
     // TODO: Inject RuleName service

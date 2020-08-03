@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * These controllers manage CRUD operations with the User object
+ * and generate a model for listing, adding and updating
+ */
+
 @Controller
 public class UserController {
 

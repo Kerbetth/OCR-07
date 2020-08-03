@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+/**
+ * These controllers manage CRUD operations with the BidList object
+ * and generate a model for listing, adding and updating
+ */
 
 @Controller
 public class BidListController {
@@ -20,7 +24,7 @@ public class BidListController {
     BidService bidService;
 
     @RequestMapping("/bidList/list")
-    public String home(Model model) {
+    public String listAllBidlists(Model model) {
         // TODO: call service find all bids to show to the view
         model.addAttribute("bidLists", bidService.loadAllBidList());
         return "bidList/list";

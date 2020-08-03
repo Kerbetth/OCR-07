@@ -17,10 +17,17 @@ public class CurvePointService {
     @Autowired
     private CurvePointRepository curvePointRepository;
 
+    /**
+     * @return all the BidList objects registered in the database
+     */
     public List<CurvePoint> loadAllCurvePoint(){
         List<CurvePoint> curvePoints = curvePointRepository.findAll();
         return curvePoints;
     }
+
+    /**
+     * @return a specify BidList object according to the Id
+     */
     public CurvePoint findCurvePointbyID(Integer id){
         if (curvePointRepository.findById(id).isPresent()) {
             CurvePoint curvePoint = curvePointRepository.findById(id).get();
@@ -29,10 +36,17 @@ public class CurvePointService {
             log.error("No CurvePoint found with this id");
         return null;
     }
+
+    /**
+     * update a bidList in the database
+     */
     public void updateCurvePoint(CurvePoint curvePoint) {
         curvePointRepository.save(curvePoint);
     }
 
+    /**
+     * delete a bidList in the database
+     */
     public void deleteCurvePoint(Integer id){
         curvePointRepository.delete(curvePointRepository.findById(id).get());
     }
