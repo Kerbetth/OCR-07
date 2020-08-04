@@ -20,13 +20,11 @@ import javax.validation.Valid;
 @Controller
 public class TradeController {
 
-    // TODO: Inject Trade service
     @Autowired
     TradeService tradeService;
 
     @RequestMapping("/trade/list")
     public String home(Model model) {
-        // TODO: find all Trade, add to model
         model.addAttribute("trades", tradeService.loadAllTrade());
         return "trade/list";
     }
@@ -39,7 +37,6 @@ public class TradeController {
 
     @PostMapping("/trade/validate")
     public String validate(@Valid Trade trade, BindingResult result) {
-        // TODO: check data valid and save to db, after saving return Trade list
         if (tradeService.findTradeByID(trade.getTradeId()) == null) {
             if (result.hasErrors()) {
                 return "trade/add";
@@ -52,7 +49,6 @@ public class TradeController {
 
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Trade by Id and to model then show to the form
         Trade trade = tradeService.findTradeByID(id);
         model.addAttribute("trade", trade);
         return "trade/update";
@@ -61,7 +57,6 @@ public class TradeController {
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
                               BindingResult result) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
         if (tradeService.findTradeByID(id) != null) {
             if (result.hasErrors()) {
                 return "trade/update";
@@ -74,7 +69,6 @@ public class TradeController {
 
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id) {
-        // TODO: Find Trade by Id and delete the Trade, return to Trade list
         Trade trade = tradeService.findTradeByID(id);
         if (trade == null) {
             throw new IdDoesntExistException(id);

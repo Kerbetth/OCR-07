@@ -22,13 +22,12 @@ import javax.validation.Valid;
 @Controller
 public class BidListController {
 
-    // TODO: Inject Bid service
+
     @Autowired
     BidService bidService;
 
     @RequestMapping("/bidList/list")
     public String listAllBidlists(Model model) {
-        // TODO: call service find all bids to show to the view
         model.addAttribute("bidLists", bidService.loadAllBidList());
         return "bidList/list";
     }
@@ -53,7 +52,6 @@ public class BidListController {
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
         BidList bidList = bidService.findBidListbyID(id);
         model.addAttribute("bidList", bidList);
         return "bidList/update";
