@@ -1,21 +1,31 @@
 package com.nnk.springboot.unit.controllers;
 
+import com.nnk.springboot.controllers.BidListController;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.BidService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +39,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 
-@EnableAutoConfiguration
+@SpringBootTest(webEnvironment = RANDOM_PORT)
+@WithMockUser(authorities = "ADMIN", username = "test@test.com")
+@AutoConfigureMockMvc(addFilters = false)
 public class BidListControllerTest {
 
     @MockBean
@@ -38,7 +50,10 @@ public class BidListControllerTest {
     @Autowired
     protected MockMvc mvc;
 
-
+@BeforeEach
+void setup(){
+    when(bidService.findBidListbyID(anyInt())).thenReturn(new BidList("test","test",10D));
+}
     @Test
     public void addGoodBidList() throws Exception {
         mvc.perform(post("/bidList/validate/")
@@ -86,6 +101,7 @@ public class BidListControllerTest {
                 .param("type", "type2")
                 .param("bidQuantity", "15.5")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/bidList/list"));
     }
 }

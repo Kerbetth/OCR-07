@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackageClasses = UserRepository.class)
+@EnableJpaRepositories(basePackages="com.nnk.springboot")
 public class Application {
 
 	public static void main(String[] args) {

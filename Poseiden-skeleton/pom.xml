@@ -160,7 +160,6 @@
 					<excludes>
 						<exclude>**/com/nnk/springboot/domain/**/*</exclude>
 						<exclude>**/com/nnk/springboot/Application.*</exclude>
-						<exclude>**/com/nnk/springboot/controllers/api/**/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
