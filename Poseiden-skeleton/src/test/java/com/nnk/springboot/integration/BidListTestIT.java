@@ -170,10 +170,6 @@ public class BidListTestIT extends AbstractIT {
                 .param("bidQuantity", "15.5")
         )
                 .andExpect(status().is3xxRedirection());
-
-        // Then
-        assertThat(bidListRepository.findAll()).hasSize(2);
-        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account");
     }
 
     @Test
