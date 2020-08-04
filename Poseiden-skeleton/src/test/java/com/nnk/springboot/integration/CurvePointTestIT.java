@@ -3,8 +3,10 @@ package com.nnk.springboot.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.controllers.CurveController;
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.repositories.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -48,7 +51,10 @@ public class CurvePointTestIT extends AbstractIT {
         curvePointRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
     }
-
+    @AfterEach
+    public void after() {
+        curvePointRepository.deleteAll();
+    }
 
     @Test
     public void generateAddCurvePointFormWithSuccess() throws Exception {
@@ -138,7 +144,7 @@ public class CurvePointTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/curvePoint/delete/10")
         )
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(curvePointRepository.findAll()).hasSize(1);
@@ -160,10 +166,8 @@ public class CurvePointTestIT extends AbstractIT {
 
         assertThat(curvePointRepository.findAll()).hasSize(1);
 
-        mvc.perform(post("/curvePoint/update//" + curvePointRepository.findAll().get(0).getId())
+        mvc.perform(post("/curvePoint/update/" + curvePointRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id","1")
                 .param("curveID","1")
                 .param("term","15.5")
                 .param("value", "20.5")
@@ -176,7 +180,7 @@ public class CurvePointTestIT extends AbstractIT {
     }
 
     @Test
-    public void updateCurvePointWhithWrongId() throws Exception {
+    public void updateCurvePointWithWrongId() throws Exception {
         // Given
 
         // When
@@ -191,14 +195,14 @@ public class CurvePointTestIT extends AbstractIT {
 
         assertThat(curvePointRepository.findAll()).hasSize(1);
 
-        mvc.perform(post("/curvePoint/update//10")
+        mvc.perform(post("/curvePoint/update/80")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")
                 .param("curveID","1")
                 .param("term","15.5")
                 .param("value", "20.5")
         )
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(curvePointRepository.findAll()).hasSize(1);

@@ -1,5 +1,7 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.controllers.exceptions.IdAlreadyExistException;
+import com.nnk.springboot.controllers.exceptions.IdDoesntExistException;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.domain.Trade;
 import com.nnk.springboot.services.RuleNameService;
@@ -38,11 +40,14 @@ public class RuleNameController {
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result) {
         // TODO: check data valid and save to db, after saving return RuleName list
-        if (result.hasErrors()) {
-            return "ruleName/add";
+        if (ruleNameService.findRuleNameByID(ruleName.getId()) == null) {
+            if (result.hasErrors()) {
+                return "ruleName/add";
+            }
+            ruleNameService.updateRuleName(ruleName);
+            return "redirect:/ruleName/list";
         }
-        ruleNameService.addRuleName(ruleName);
-        return "redirect:/ruleName/list";
+        throw new IdAlreadyExistException(ruleName.getId());
     }
 
     @GetMapping("/ruleName/update/{id}")
@@ -62,20 +67,24 @@ public class RuleNameController {
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
                                  BindingResult result) {
         // TODO: check required fields, if valid call service to update RuleName and return RuleName list
-        if (result.hasErrors() || ruleNameService.findRuleNameByID(id) == null) {
-            return "ruleName/update";
+        if (ruleNameService.findRuleNameByID(id) != null) {
+            if (result.hasErrors()) {
+                return "ruleName/update";
+            }
+            ruleNameService.updateRuleName(ruleName);
+            return "redirect:/ruleName/list";
         }
-        ruleNameService.updateRuleName(ruleName);
-        return "redirect:/ruleName/list";
+        throw new IdDoesntExistException(id);
     }
 
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id) {
         // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
-        if (ruleNameService.findRuleNameByID(id) == null) {
-            return "redirect:/ruleName/list";
+        RuleName ruleName = ruleNameService.findRuleNameByID(id);
+        if (ruleName == null) {
+            throw new IdDoesntExistException(id);
         }
-        ruleNameService.deleteRuleName(id);
+        ruleNameService.deleteRuleName(ruleName);
         return "redirect:/ruleName/list";
     }
 }

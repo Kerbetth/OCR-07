@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 import com.nnk.springboot.domain.BidList;
 
 import java.util.List;
+
 /**
  * BidService manage CRUD service for BidList Object
- *
  */
 
 @Service
@@ -23,17 +23,17 @@ public class BidService {
      * @return all the BidList objects registered in the database
      */
     public List<BidList> loadAllBidList() {
-        List<BidList> bidLists = bidListRepository.findAll();
-        return bidLists;
+        return bidListRepository.findAll();
     }
 
     /**
      * @return a specify BidList object according to the Id
      */
     public BidList findBidListbyID(Integer integer) {
-        if (bidListRepository.findById(integer).isPresent()) {
-            BidList bidList = bidListRepository.findById(integer).get();
-            return bidList;
+        if (integer != null) {
+            if (bidListRepository.findById(integer).isPresent()) {
+                return bidListRepository.findById(integer).get();
+            }
         } else
             log.error("No BidList found with this id");
         return null;
@@ -48,8 +48,9 @@ public class BidService {
 
     /**
      * delete a bidList in the database
+     * @param bidList
      */
-    public void deleteBidlist(Integer id) {
-        bidListRepository.delete(bidListRepository.findById(id).get());
+    public void deleteBidlist(BidList bidList) {
+        bidListRepository.delete(bidList);
     }
 }

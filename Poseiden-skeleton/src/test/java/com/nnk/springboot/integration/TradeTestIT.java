@@ -1,6 +1,7 @@
 package com.nnk.springboot.integration;
 
 import com.nnk.springboot.repositories.TradeRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class TradeTestIT extends AbstractIT{
     public void setup() {
         tradeRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
+    }
+
+    @AfterEach
+    public void after() {
+        tradeRepository.deleteAll();
     }
 
     @Test
@@ -127,9 +133,9 @@ public class TradeTestIT extends AbstractIT{
                 .param("buyQuantity", "50.5")
         )
                 .andExpect(status().is3xxRedirection());
-        mvc.perform(get("/trade/delete/10")
+        mvc.perform(get("/trade/delete/80")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(tradeRepository.findAll()).hasSize(1);
@@ -180,14 +186,14 @@ public class TradeTestIT extends AbstractIT{
 
         assertThat(tradeRepository.findAll()).hasSize(1);
 
-        mvc.perform(post("/trade/update/10")
+        mvc.perform(post("/trade/update/80")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("tradeId","1")
                 .param("type","jsonFeature")
                 .param("account","another usual description")
                 .param("buyQuantity", "50.5")
         )
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(tradeRepository.findAll()).hasSize(1);

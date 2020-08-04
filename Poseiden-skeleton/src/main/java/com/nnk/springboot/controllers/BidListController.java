@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.controllers.exceptions.IdAlreadyExistException;
+import com.nnk.springboot.controllers.exceptions.IdDoesntExistException;
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.domain.CurvePoint;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.BidService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +40,15 @@ public class BidListController {
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result) {
-       if (result.hasErrors()) {
-            return "bidList/add";
+    public String validate(@Valid BidList bidList, BindingResult result) {
+        if (bidService.findBidListbyID(bidList.getBidListId()) == null) {
+            if (result.hasErrors()) {
+                return "bidList/add";
+            }
+            bidService.updateBidlist(bidList);
+            return "redirect:/bidList/list";
         }
-        bidService.updateBidlist(bid);
-        // TODO: check data valid and save to db, after saving return bid list
-        return "redirect:/bidList/list";
+        throw new IdAlreadyExistException(bidList.getBidListId());
     }
 
     @GetMapping("/bidList/update/{id}")
@@ -56,20 +61,23 @@ public class BidListController {
 
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList, BindingResult result) {
-        if (result.hasErrors() || bidService.findBidListbyID(id)==null) {
-            return "bidList/update";
+        if (bidService.findBidListbyID(id) != null) {
+            if (result.hasErrors()) {
+                return "bidList/update";
+            }
+            bidService.updateBidlist(bidList);
+            return "redirect:/bidList/list";
         }
-        bidList.setBidListId(id);
-        bidService.updateBidlist(bidList);
-        return "redirect:/bidList/list";
+        throw new IdDoesntExistException(id);
     }
 
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
-        if (bidService.findBidListbyID(id)==null) {
-            return "redirect:/bidList/list";
+        BidList bidList = bidService.findBidListbyID(id);
+        if (bidList == null) {
+            throw new IdDoesntExistException(id);
         }
-        bidService.deleteBidlist(id);
+        bidService.deleteBidlist(bidList);
         return "redirect:/bidList/list";
     }
 }

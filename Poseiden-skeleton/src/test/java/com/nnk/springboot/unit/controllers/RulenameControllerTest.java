@@ -71,7 +71,7 @@ public class RulenameControllerTest {
 
     @Test
     public void addGoodRulename() throws Exception {
-
+        when(ruleNameService.findRuleNameByID(anyInt())).thenReturn(null);
         mvc.perform(post("/ruleName/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")

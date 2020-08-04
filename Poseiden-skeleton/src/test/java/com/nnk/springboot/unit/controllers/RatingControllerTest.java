@@ -70,7 +70,7 @@ public class RatingControllerTest {
 
     @Test
     public void addGoodRating() throws Exception {
-
+        when(ratingService.findRatingByID(anyInt())).thenReturn(null);
         mvc.perform(post("/rating/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")
@@ -91,17 +91,15 @@ public class RatingControllerTest {
     }
 
     @Test
-    public void updateRating() throws Exception {
-
-
+    public void updateRatingWithWrongId() throws Exception {
+        when(ratingService.findRatingByID(anyInt())).thenReturn(null);
         mvc.perform(post("/rating/update/1")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")
                 .param("curveID","1")
                 .param("term","15.5")
                 .param("value", "20.5")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
     }
 }

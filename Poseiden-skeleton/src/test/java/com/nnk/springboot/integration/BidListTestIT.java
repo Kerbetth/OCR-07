@@ -3,6 +3,7 @@ package com.nnk.springboot.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.repositories.BidListRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +48,10 @@ public class BidListTestIT extends AbstractIT {
     public void setup() {
         bidListRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
+    }
+    @AfterEach
+    public void after() {
+        bidListRepository.deleteAll();
     }
 
     @Test
@@ -135,7 +140,7 @@ public class BidListTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/bidList/delete/10")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(bidListRepository.findAll()).hasSize(1);
@@ -167,8 +172,8 @@ public class BidListTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
 
         // Then
-        assertThat(bidListRepository.findAll()).hasSize(1);
-        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account2");
+        assertThat(bidListRepository.findAll()).hasSize(2);
+        assertThat(bidListRepository.findAll().get(0).getAccount()).isEqualTo("account");
     }
 
     @Test
@@ -188,14 +193,14 @@ public class BidListTestIT extends AbstractIT {
         assertThat(bidListRepository.findAll()).hasSize(1);
 
 
-        mvc.perform(post("/bidList/update/10")
+        mvc.perform(post("/bidList/update/80")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("bidListId","1")
                 .param("account","account2")
                 .param("type", "type2")
                 .param("bidQuantity", "15.5")
         )
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(bidListRepository.findAll()).hasSize(1);

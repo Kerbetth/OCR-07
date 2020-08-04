@@ -5,6 +5,7 @@ import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RatingRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,7 +50,10 @@ public class RatingTestIT extends AbstractIT {
         ratingRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
     }
-
+    @AfterEach
+    public void after() {
+        ratingRepository.deleteAll();
+    }
     @Test
     public void addGoodRating() throws Exception {
         // Given
@@ -144,7 +148,7 @@ public class RatingTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/rating/delete/10")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(ratingRepository.findAll()).hasSize(1);
@@ -166,9 +170,8 @@ public class RatingTestIT extends AbstractIT {
 
         assertThat(ratingRepository.findAll()).hasSize(1);
 
-        mvc.perform(post("/rating/update//"+ ratingRepository.findAll().get(0).getId())
+        mvc.perform(post("/rating/update/"+ ratingRepository.findAll().get(0).getId())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("id","1")
                 .param("fitchRating","fitch2")
                 .param("moodysRating", "moody2")
                 .param("sandPRating", "sand2")
@@ -203,7 +206,7 @@ public class RatingTestIT extends AbstractIT {
                 .param("moodysRating", "moody2")
                 .param("sandPRating", "sand2")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(ratingRepository.findAll()).hasSize(1);

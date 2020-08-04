@@ -20,33 +20,34 @@ public class RatingService {
      * @return all the Rating objects registered in the database
      */
     public List<Rating> loadAllRating() {
-        List<Rating> rating = ratingRepository.findAll();
-        return rating;
+        return ratingRepository.findAll();
     }
 
     /**
-     * @return all the Rating objects registered in the database
+     * @return a specify RuleName object according to the Id
      */
-    public Rating findRatingByID(Integer id){
-        if (ratingRepository.findById(id).isPresent()) {
-            Rating rating = ratingRepository.findById(id).get();
-            return rating;
+    public Rating findRatingByID(Integer id) {
+        if (id != null) {
+            if (ratingRepository.findById(id).isPresent()) {
+                return  ratingRepository.findById(id).get();
+            }
         } else
             log.error("No Rating found with this id");
         return null;
     }
 
     /**
-     * @return all the Rating objects registered in the database
+     * update a RuleName in the database
      */
     public void updateRating(Rating rating) {
         ratingRepository.save(rating);
     }
 
     /**
-     * @return all the Rating objects registered in the database
+     * delete a Rating in the database
+     * @param rating
      */
-    public void deleteRating(Integer id) {
-        ratingRepository.delete(ratingRepository.findById(id).get());
+    public void deleteRating(Rating rating) {
+        ratingRepository.delete(rating);
     }
 }

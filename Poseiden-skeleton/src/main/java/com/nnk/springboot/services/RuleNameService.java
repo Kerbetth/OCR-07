@@ -16,50 +16,41 @@ public class RuleNameService {
 
     @Autowired
     private RuleNameRepository ruleNameRepository;
-    
+
     /**
      * @return all the RuleName objects registered in the database
      */
-    public List<RuleName> loadAllRating(){
+    public List<RuleName> loadAllRating() {
         return ruleNameRepository.findAll();
     }
-    public RuleName findRuleNameByID(Integer id) {
-        if (ruleNameRepository.findById(id).isPresent()) {
-            return ruleNameRepository.findById(id).get();
-        } else
-            log.error("No RuleName found with id "+id);
-        return null;
-    }
-    
+
     /**
      * @return a specify RuleName object according to the Id
      */
-    public void addRuleName(RuleName ruleName){
-        if (!ruleNameRepository.findById(ruleName.getId()).isPresent()) {
-            ruleNameRepository.save(ruleName);
+    public RuleName findRuleNameByID(Integer id) {
+        if (id != null) {
+            Optional<RuleName> ruleName = ruleNameRepository.findById(id);
+            if (ruleName.isPresent()) {
+                return ruleName.get();
+            }
         } else
-            log.error("A RuleName already exist with this id: "+ ruleName.getId());
+            log.error("No RuleName found with id " + id);
+        return null;
     }
-    
+
+
     /**
      * update a RuleName in the database
      */
-    public void updateRuleName(RuleName ruleName){
-        if (ruleNameRepository.findById(ruleName.getId()).isPresent()) {
-            ruleNameRepository.save(ruleName);
-        } else
-            log.error("No RuleName found with id "+ruleName.getId());
+    public void updateRuleName(RuleName ruleName) {
+        ruleNameRepository.save(ruleName);
     }
 
     /**
      * delete a RuleName in the database
+     * @param ruleName
      */
-    public void deleteRuleName(Integer id){
-        Optional<RuleName> optionalRuleName = ruleNameRepository.findById(id);
-        if (optionalRuleName.isPresent()) {
-            ruleNameRepository.delete(optionalRuleName.get());
-            log.error("Rulename "+id+" has been deleted");
-        }else
-            log.error("No RuleName found with id "+id);
+    public void deleteRuleName(RuleName ruleName) {
+        ruleNameRepository.delete(ruleName);
     }
 }

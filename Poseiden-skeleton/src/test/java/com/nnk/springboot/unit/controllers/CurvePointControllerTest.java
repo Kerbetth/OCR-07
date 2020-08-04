@@ -78,7 +78,7 @@ public class CurvePointControllerTest {
 
     @Test
     public void addGoodCurvePoint() throws Exception {
-
+        when(curvePointService.findCurvePointbyID(anyInt())).thenReturn(null);
         mvc.perform(post("/curvePoint/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("id","1")

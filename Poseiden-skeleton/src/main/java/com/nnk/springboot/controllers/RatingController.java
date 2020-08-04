@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
+import com.nnk.springboot.controllers.exceptions.IdAlreadyExistException;
+import com.nnk.springboot.controllers.exceptions.IdDoesntExistException;
 import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.services.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,8 +24,7 @@ public class RatingController {
     RatingService ratingService;
 
     @RequestMapping("/rating/list")
-    public String home(Model model)
-    {
+    public String home(Model model) {
         // TODO: find all Rating, add to model
         model.addAttribute("ratings", ratingService.loadAllRating());
         return "rating/list";
@@ -37,11 +39,14 @@ public class RatingController {
     @PostMapping("/rating/validate")
     public String validate(@Valid Rating rating, BindingResult result) {
         // TODO: check data valid and save to db, after saving return Rating list
-        if (result.hasErrors()) {
-            return "rating/add";
+        if (ratingService.findRatingByID(rating.getId()) == null) {
+            if (result.hasErrors()) {
+                return "rating/add";
+            }
+            ratingService.updateRating(rating);
+            return "redirect:/rating/list";
         }
-        ratingService.updateRating(rating);
-        return "redirect:/rating/list";
+        throw new IdAlreadyExistException(rating.getId());
     }
 
     @GetMapping("/rating/update/{id}")
@@ -53,23 +58,26 @@ public class RatingController {
 
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
-                             BindingResult result) {
-        if (result.hasErrors()|| ratingService.findRatingByID(id)==null) {
+                               BindingResult result) {
+        // TODO: check required fields, if valid call service to update Rating and return Rating list
+        if (ratingService.findRatingByID(id) != null) {
+            if (result.hasErrors()) {
+                return "rating/update";
+            }
+            ratingService.updateRating(rating);
             return "redirect:/rating/list";
         }
-        rating.setId(id);
-        ratingService.updateRating(rating);
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
-        return "redirect:/rating/list";
+        throw new IdDoesntExistException(id);
     }
 
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id) {
-        if (ratingService.findRatingByID(id)==null) {
-            return "redirect:/rating/list";
-        }
-        ratingService.deleteRating(id);
         // TODO: Find Rating by Id and delete the Rating, return to Rating list
+        Rating rating = ratingService.findRatingByID(id);
+        if (rating == null) {
+            throw new IdDoesntExistException(id);
+        }
+        ratingService.deleteRating(rating);
         return "redirect:/rating/list";
     }
 }

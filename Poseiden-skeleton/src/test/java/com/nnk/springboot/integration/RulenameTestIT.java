@@ -3,6 +3,7 @@ package com.nnk.springboot.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,10 @@ public class RulenameTestIT extends AbstractIT {
         ruleNameRepository.deleteAll();
         when(result.hasErrors()).thenReturn(false);
     }
-
+    @AfterEach
+    public void after() {
+        ruleNameRepository.deleteAll();
+    }
     @Test
     public void addGoodRuleName() throws Exception {
         // Given
@@ -129,7 +133,7 @@ public class RulenameTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
         mvc.perform(get("/ruleName/delete/10")
         )
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is4xxClientError());
 
         // Then
         assertThat(ruleNameRepository.findAll()).hasSize(1);
@@ -161,7 +165,7 @@ public class RulenameTestIT extends AbstractIT {
                 .andExpect(status().is3xxRedirection());
 
         // Then
-        assertThat(ruleNameRepository.findAll()).hasSize(1);
+        assertThat(ruleNameRepository.findAll()).hasSize(2);
         assertThat(ruleNameRepository.findAll().get(0).getDescription()).isEqualTo("usual description");
     }
 

@@ -56,6 +56,7 @@ void setup(){
 }
     @Test
     public void addGoodBidList() throws Exception {
+        when(bidService.findBidListbyID(anyInt())).thenReturn(null);
         mvc.perform(post("/bidList/validate/")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("bidListId", "1")

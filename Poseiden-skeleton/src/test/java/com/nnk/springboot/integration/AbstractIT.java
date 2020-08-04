@@ -42,6 +42,5 @@ public class AbstractIT {
 
     @Autowired
     MockMvc mvc;
-
     BindingResult result = mock(BindingResult.class);
 }
