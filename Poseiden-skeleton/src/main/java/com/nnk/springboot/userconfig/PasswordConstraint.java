@@ -1,4 +1,4 @@
-package com.nnk.springboot.config;
+package com.nnk.springboot.userconfig;
 
 import org.passay.*;
 
@@ -30,10 +30,6 @@ public class PasswordConstraint implements ConstraintValidator<ValidPassword, St
         if (result.isValid()) {
             return true;
         }
-        context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(
-                Joiner.on(",").join(validator.getMessages(result)))
-                .addConstraintViolation();
         return false;
     }
 }

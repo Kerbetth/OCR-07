@@ -1,6 +1,4 @@
-package com.nnk.springboot.config;
-
-import com.nnk.springboot.config.PasswordConstraint;
+package com.nnk.springboot.userconfig;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -14,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 public @interface ValidPassword {
 
-    String message() default "Invalid Password";
+    String message() default "Invalid Password.It needs to have at least 8 characters (maximum 30), an uppercase, a number and a special character";
 
     Class<?>[] groups() default {};
 
