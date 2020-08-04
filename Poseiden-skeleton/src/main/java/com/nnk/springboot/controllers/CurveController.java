@@ -21,13 +21,11 @@ import javax.validation.Valid;
 @Controller
 public class CurveController {
 
-    // TODO: Inject Curve Point service
     @Autowired
     CurvePointService curvePointService;
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
-        // TODO: find all Curve Point, add to model
         model.addAttribute("curvePoints", curvePointService.loadAllCurvePoint());
         return "curvePoint/list";
     }
@@ -40,7 +38,6 @@ public class CurveController {
 
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result) {
-        // TODO: check data valid and save to db, after saving return Curve list
         if (curvePointService.findCurvePointbyID(curvePoint.getCurveID()) == null) {
             if (result.hasErrors()) {
                 return "curvePoint/add";
@@ -53,7 +50,6 @@ public class CurveController {
 
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get CurvePoint by Id and to model then show to the form
         CurvePoint curvePoint = curvePointService.findCurvePointbyID(id);
         model.addAttribute("curvePoint", curvePoint);
         return "curvePoint/update";
@@ -62,7 +58,6 @@ public class CurveController {
     @PostMapping("/curvePoint/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
                             BindingResult result) {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
         if (curvePointService.findCurvePointbyID(id) != null) {
             if (result.hasErrors()) {
                 return "curvePoint/update";
@@ -76,7 +71,6 @@ public class CurveController {
 
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
         CurvePoint curvePoint = curvePointService.findCurvePointbyID(id);
         if (curvePoint == null) {
             throw new IdDoesntExistException(id);
