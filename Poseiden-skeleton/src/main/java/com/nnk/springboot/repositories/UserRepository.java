@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+import java.util.Optional;
+
 
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
     @Query(value = "select * from users where userName = :userName", nativeQuery = true)
     User findByUserName(@Param("userName") String userName);
+    List<User> findAll();
+    Optional<User> findById(Integer ratingID);
 }
